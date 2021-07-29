@@ -14,13 +14,17 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 public class MainActivityTwo extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 100;
     //public static final String imageURL = "http://www.tutorialspoint.com/java/java_tutorial.pdf";
     public static final String imageURL = "http://speedtest.ftp.otenet.gr/files/test10Mb.db";
-   // String imageName = "java_tutorial.pdf";
+    // String imageName = "java_tutorial.pdf";
     String imageName = "test.db";
 
     @Override
@@ -45,14 +49,12 @@ public class MainActivityTwo extends AppCompatActivity {
     }
 
     public void downloadImage(String url, String outputFileName) {
-
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(imageName);
         request.setDescription("Downloading " + imageName);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.allowScanningByMediaScanner();
         //request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, outputFileName);
-        //request.setDestinationInExternalPublicDir(Environment.getExternalStorageDirectory().toString() + File.separator, outputFileName);
         request.setDestinationInExternalFilesDir(this, Environment.getExternalStorageDirectory().toString() + File.separator, outputFileName);
         DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
         manager.enqueue(request);
