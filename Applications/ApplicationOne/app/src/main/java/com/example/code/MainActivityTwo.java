@@ -13,6 +13,8 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+
 public class MainActivityTwo extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 100;
@@ -43,12 +45,15 @@ public class MainActivityTwo extends AppCompatActivity {
     }
 
     public void downloadImage(String url, String outputFileName) {
+
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setTitle(imageName);
         request.setDescription("Downloading " + imageName);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.allowScanningByMediaScanner();
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, outputFileName);
+        //request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, outputFileName);
+        //request.setDestinationInExternalPublicDir(Environment.getExternalStorageDirectory().toString() + File.separator, outputFileName);
+        request.setDestinationInExternalFilesDir(this, Environment.getExternalStorageDirectory().toString() + File.separator, outputFileName);
         DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
         manager.enqueue(request);
     }
