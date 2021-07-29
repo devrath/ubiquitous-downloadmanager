@@ -29,6 +29,7 @@ class DownloadHelper(var context: Context) {
             // setRequiresCharging(false)// Set if charging is required to begin the download
             setAllowedOverMetered(true) // Set if download is allowed on Mobile network
             setAllowedOverRoaming(true) // Set if download is allowed on roaming network
+            setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
         }
 
         var downloadManager: DownloadManager? = null
@@ -76,14 +77,15 @@ class DownloadHelper(var context: Context) {
 
     private fun createNewFile(context: Context): File {
 
-        val directory = File(Environment.getExternalStorageDirectory().toString() + File.separator + "MPL")
-        directory.mkdirs()
+       /* val directory = File(Environment.getExternalStorageDirectory().toString() + File.separator + "MPL")
+        directory.mkdirs()*/
 
         var fileName = url.substring(url.lastIndexOf('/') + 1)
         fileName = fileName.substring(0, 1).toUpperCase(Locale.ROOT) + fileName.substring(1)
 
         //val dir: File = context.filesDir
-        val file = File(directory, fileName)
+        //val file = File(directory, fileName)
+        val file = File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + "/MPL/", fileName)
 
         try {
             Log.d(TAG, "The file path = " + file.absolutePath)
