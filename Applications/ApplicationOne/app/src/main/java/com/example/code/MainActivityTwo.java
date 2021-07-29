@@ -55,7 +55,10 @@ public class MainActivityTwo extends AppCompatActivity {
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.allowScanningByMediaScanner();
         //request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, outputFileName); // ---> Working
-        request.setDestinationInExternalFilesDir(this, Environment.getExternalStorageDirectory().toString() + File.separator, outputFileName);
+        //request.setDestinationInExternalFilesDir(this, Environment.getExternalStorageDirectory().toString() + File.separator, outputFileName);
+        request.setDestinationInExternalFilesDir(this, getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
+                .concat(File.separator)
+                .concat("Devrath").concat(File.separator), outputFileName);
         DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
         manager.enqueue(request);
     }
