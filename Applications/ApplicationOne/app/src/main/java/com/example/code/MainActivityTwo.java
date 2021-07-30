@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,12 +26,20 @@ public class MainActivityTwo extends AppCompatActivity {
     //public static final String imageURL = "http://www.tutorialspoint.com/java/java_tutorial.pdf";
     public static final String imageURL = "http://speedtest.ftp.otenet.gr/files/test10Mb.db";
     // String imageName = "java_tutorial.pdf";
-    String imageName = "test.db";
+
+    String filePath = "";
+    String imageName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        filePath = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
+                .concat(File.separator)
+                .concat("Devrath").concat(File.separator);
+
+        imageName = "test.db";
 
         // storage runtime permission
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -40,12 +49,10 @@ public class MainActivityTwo extends AppCompatActivity {
         }
 
         Button btnDownloadImage = findViewById(R.id.initiateDownloadId);
-        btnDownloadImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downloadImage(imageURL, imageName);
-            }
-        });
+        Button chkIfFileExistsId = findViewById(R.id.chkIfFileExistsId);
+        btnDownloadImage.setOnClickListener(v -> downloadImage(imageURL, imageName));
+        chkIfFileExistsId.setOnClickListener(v -> checkIfFileExists());
+
     }
 
     public void downloadImage(String url, String outputFileName) {
@@ -56,10 +63,19 @@ public class MainActivityTwo extends AppCompatActivity {
         request.allowScanningByMediaScanner();
         //request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, outputFileName); // ---> Working
         //request.setDestinationInExternalFilesDir(this, Environment.getExternalStorageDirectory().toString() + File.separator, outputFileName);
-        request.setDestinationInExternalFilesDir(this, getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
-                .concat(File.separator)
-                .concat("Devrath").concat(File.separator), outputFileName);
+        request.setDestinationInExternalFilesDir(this,filePath, outputFileName);
         DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
         manager.enqueue(request);
+    }
+
+    private void checkIfFileExists() {
+
+        //-> /storage/emulated/0/Android/data/com.example.code/files/Download/Devrath/test.db
+        File mFile = new File(filePath.concat(imageName));
+        if(mFile.exists()){
+            Toast.makeText(this,"File exists",Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(this,"File does not exists",Toast.LENGTH_LONG).show();
+        }
     }
 }
