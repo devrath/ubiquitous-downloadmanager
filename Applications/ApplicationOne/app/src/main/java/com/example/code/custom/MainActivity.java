@@ -2,6 +2,7 @@ package com.example.code.custom;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -11,6 +12,8 @@ import android.os.Environment;
 import android.view.View;
 import android.webkit.URLUtil;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,25 +30,40 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 101;
     public static final String imageURL = "http://speedtest.ftp.otenet.gr/files/test10Mb.db";
     String downloadPath = "";
+    String filename = "test.db";
 
     List<DownloadModel> downloadModels=new ArrayList<>();
 
     View rootView;
-    Button rootView;
+    Button pause_resume;
+    TextView file_status;
+    TextView file_title;
+    TextView file_size;
+    ProgressBar file_progress;
+    Button initiateDownloadId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setOnClickListeners();
+        findViews();
+        setOnClickListener();
         setFilePath();
-
-        findViewById(R.id.chkIfFileExistsId).setOnClickListener(v -> togglePauseResume());
     }
 
-    private void setOnClickListeners() {
+    private void setOnClickListener() {
+        pause_resume.setOnClickListener(v -> togglePauseResume());
+        initiateDownloadId.setOnClickListener(v -> downloadFile(imageURL));
+    }
+
+    private void findViews() {
         rootView = findViewById(R.id.downloadWidgetId);
-        rootView = findViewById(R.id.downloadWidgetId);
+        pause_resume = rootView.findViewById(R.id.pause_resume);
+        file_status = rootView.findViewById(R.id.file_status);
+        file_title = rootView.findViewById(R.id.file_title);
+        file_progress = rootView.findViewById(R.id.file_progress);
+        file_size = rootView.findViewById(R.id.file_size);
+        initiateDownloadId = rootView.findViewById(R.id.initiateDownloadId);
     }
 
     private void setFilePath() {
@@ -101,7 +119,12 @@ public class MainActivity extends AppCompatActivity {
             if (!downloadModel.getStatus().equalsIgnoreCase("PAUSE") && !downloadModel.getStatus().equalsIgnoreCase("RESUME")) {
                 downloadModel.setStatus(values[2]);
             }
-            downloadAdapter.changeItem(downloadModel.getDownloadId());
+
+
+            file_title.setText(getDownloadObject().getTitle());
+            file_status.setText(getDownloadObject().getStatus());
+            file_progress.setProgress(Integer.parseInt(getDownloadObject().getProgress()));
+            file_size.setText("Downloaded : "+getDownloadObject().getFile_size());
 
         }
     }
@@ -172,20 +195,22 @@ public class MainActivity extends AppCompatActivity {
         downloadModel.setDownloadId(downloadId);
         downloadModel.setFile_path("");
         downloadModels.add(downloadModel);
-        downloadAdapter.notifyItemInserted(downloadModels.size()-1);
 
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyToRealm(downloadModel);
-            }
-        });
 
 
         DownloadStatusTask downloadStatusTask=new DownloadStatusTask(downloadModel);
         runTask(downloadStatusTask,""+downloadId);
 
 
+    }
+
+    public void runTask(DownloadStatusTask downloadStatusTask,String id){
+        try{
+            downloadStatusTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private String bytesIntoHumanReadable(long bytes) {
@@ -218,28 +243,54 @@ public class MainActivity extends AppCompatActivity {
         DownloadModel downloadModel = getDownloadObject();
         if(getDownloadObject().isIs_paused()){
             downloadModel.setIs_paused(false);
-            downloadViewHolder.pause_resume.setText("PAUSE");
+            pause_resume.setText("PAUSE");
             downloadModel.setStatus("RESUME");
-            downloadViewHolder.file_status.setText("Running");
+            file_status.setText("Running");
             if(!resumeDownload(downloadModel)){
-                Toast.makeText(context, "Failed to Resume", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to Resume", Toast.LENGTH_SHORT).show();
             }
-            notifyItemChanged(position);
         }
         else {
             downloadModel.setIs_paused(true);
-            downloadViewHolder.pause_resume.setText("RESUME");
+            pause_resume.setText("RESUME");
             downloadModel.setStatus("PAUSE");
-            downloadViewHolder.file_status.setText("PAUSE");
+            file_status.setText("PAUSE");
             if(!pauseDownload(downloadModel)){
-                Toast.makeText(context, "Failed to Pause", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to Pause", Toast.LENGTH_SHORT).show();
             }
-            notifyItemChanged(position);
         }
     }
 
     private DownloadModel getDownloadObject() {
         return downloadModels.get(0);
+    }
+
+    private boolean pauseDownload(DownloadModel downloadModel) {
+        int updatedRow=0;
+        ContentValues contentValues=new ContentValues();
+        contentValues.put("control",1);
+
+        try{
+            updatedRow=getContentResolver().update(Uri.parse(downloadPath),contentValues,"title=?",new String[]{filename});
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0<updatedRow;
+    }
+
+    private boolean resumeDownload(DownloadModel downloadModel) {
+        int updatedRow=0;
+        ContentValues contentValues=new ContentValues();
+        contentValues.put("control",0);
+
+        try{
+            updatedRow=getContentResolver().update(Uri.parse(downloadPath),contentValues,"title=?",new String[]{filename});
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return 0<updatedRow;
     }
 
 
