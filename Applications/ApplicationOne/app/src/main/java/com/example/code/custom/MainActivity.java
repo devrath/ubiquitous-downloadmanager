@@ -2,7 +2,11 @@ package com.example.code.custom;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         findViews();
         setOnClickListener();
         setFilePath();
+        registerReceiver(onComplete,new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     private void setOnClickListener() {
@@ -271,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
         contentValues.put("control",1);
 
         try{
-            updatedRow=getContentResolver().update(Uri.parse(downloadPath),contentValues,"title=?",new String[]{filename});
+            updatedRow=getContentResolver().update(Uri.parse("content://downloads/my_downloads"),contentValues,"title=?",new String[]{downloadModel.getTitle()});
         }
         catch (Exception e){
             e.printStackTrace();
@@ -285,13 +290,50 @@ public class MainActivity extends AppCompatActivity {
         contentValues.put("control",0);
 
         try{
-            updatedRow=getContentResolver().update(Uri.parse(downloadPath),contentValues,"title=?",new String[]{filename});
+            updatedRow=getContentResolver().update(Uri.parse("content://downloads/my_downloads"),contentValues,"title=?",new String[]{downloadModel.getTitle()});
         }
         catch (Exception e){
             e.printStackTrace();
         }
         return 0<updatedRow;
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(onComplete);
+    }
+
+
+    BroadcastReceiver onComplete=new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            long id=intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID,-1);
+            boolean comp=ChangeItemWithStatus("Completed");
+
+            if(comp){
+                DownloadManager.Query query=new DownloadManager.Query();
+                query.setFilterById(id);
+                DownloadManager downloadManager= (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                Cursor cursor=downloadManager.query(new DownloadManager.Query().setFilterById(id));
+                cursor.moveToFirst();
+
+                String downloaded_path=cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                setChangeItemFilePath(downloaded_path,id);
+            }
+        }
+    };
+
+    public boolean ChangeItemWithStatus(final String message){
+        boolean comp=true;
+        downloadModels.get(0).setStatus(message);
+        return comp;
+    }
+
+    public void setChangeItemFilePath(final String path, long id){
+        downloadModels.get(0).setFile_path(path);
+    }
+
 
 
 }
