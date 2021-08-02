@@ -1,6 +1,16 @@
 package com.example.code.custom
 
+import android.annotation.SuppressLint
+import android.app.DownloadManager
+import android.content.ContentValues
+import android.content.Context
+import android.database.Cursor
+import android.net.Uri
+
+@SuppressLint("Range")
 object DisplayFileSize {
+
+    private const val downloadUri = "content://downloads/my_downloads"
 
     fun bytesIntoHumanReadable(bytes: Long): String {
         val kilobyte: Long = 1024
@@ -15,6 +25,53 @@ object DisplayFileSize {
             bytes >= terabyte -> (bytes / terabyte).toString() + " TB"
             else -> "$bytes Bytes"
         }
+    }
+
+    fun getStatusMessage(cursor: Cursor): String {
+        var msg = "-"
+        msg = when (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
+            DownloadManager.STATUS_FAILED -> "Failed"
+            DownloadManager.STATUS_PAUSED -> "Paused"
+            DownloadManager.STATUS_RUNNING -> "Running"
+            DownloadManager.STATUS_SUCCESSFUL -> "Completed"
+            DownloadManager.STATUS_PENDING -> "Pending"
+            else -> "Unknown"
+        }
+        return msg
+    }
+
+    fun pauseDownload(context: Context, downloadModel: DownloadModel): Boolean {
+        var updatedRow = 0
+        val contentValues = ContentValues()
+        contentValues.put("control", 1)
+        try {
+            updatedRow = context.contentResolver.update(
+                Uri.parse(downloadUri),
+                contentValues,
+                "title=?",
+                arrayOf(downloadModel.getTitle())
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return 0 < updatedRow
+    }
+
+    fun resumeDownload(context: Context, downloadModel: DownloadModel): Boolean {
+        var updatedRow = 0
+        val contentValues = ContentValues()
+        contentValues.put("control", 0)
+        try {
+            updatedRow = context.contentResolver.update(
+                Uri.parse(downloadUri),
+                contentValues,
+                "title=?",
+                arrayOf(downloadModel.getTitle())
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return 0 < updatedRow
     }
 
 }
