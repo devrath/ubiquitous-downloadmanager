@@ -131,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
             file_progress.setProgress(Integer.parseInt(getDownloadObject().getProgress()));
             file_size.setText("Downloaded : "+getDownloadObject().getFile_size());
 
+
+
         }
     }
 
