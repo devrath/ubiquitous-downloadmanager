@@ -119,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
         protected void onProgressUpdate(final String... values) {
             super.onProgressUpdate(values);
 
-            downloadModel.setFile_size(bytesIntoHumanReadable(Long.parseLong(values[1])));
+            downloadModel.setFile_size(DisplayFileSize.INSTANCE.bytesIntoHumanReadable(Long.parseLong(values[1])));
+
             downloadModel.setProgress(values[0]);
             if (!downloadModel.getStatus().equalsIgnoreCase("PAUSE") && !downloadModel.getStatus().equalsIgnoreCase("RESUME")) {
                 downloadModel.setStatus(values[2]);
@@ -220,32 +221,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String bytesIntoHumanReadable(long bytes) {
-        long kilobyte = 1024;
-        long megabyte = kilobyte * 1024;
-        long gigabyte = megabyte * 1024;
-        long terabyte = gigabyte * 1024;
-
-        if ((bytes >= 0) && (bytes < kilobyte)) {
-            return bytes + " B";
-
-        } else if ((bytes >= kilobyte) && (bytes < megabyte)) {
-            return (bytes / kilobyte) + " KB";
-
-        } else if ((bytes >= megabyte) && (bytes < gigabyte)) {
-            return (bytes / megabyte) + " MB";
-
-        } else if ((bytes >= gigabyte) && (bytes < terabyte)) {
-            return (bytes / gigabyte) + " GB";
-
-        } else if (bytes >= terabyte) {
-            return (bytes / terabyte) + " TB";
-
-        } else {
-            return bytes + " Bytes";
-        }
-    }
-
     private void togglePauseResume() {
         DownloadModel downloadModel = getDownloadObject();
         if(getDownloadObject().isIs_paused()){
@@ -253,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
             pause_resume.setText("PAUSE");
             downloadModel.setStatus("RESUME");
             file_status.setText("Running");
-            if(!resumeDownload(downloadModel)){
+            if(!DownloadActions.INSTANCE.resumeDownload(this,downloadModel)){
                 Toast.makeText(this, "Failed to Resume", Toast.LENGTH_SHORT).show();
             }
         }
@@ -262,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
             pause_resume.setText("RESUME");
             downloadModel.setStatus("PAUSE");
             file_status.setText("PAUSE");
-            if(!pauseDownload(downloadModel)){
+            if(!DownloadActions.INSTANCE.pauseDownload(this,downloadModel)){
                 Toast.makeText(this, "Failed to Pause", Toast.LENGTH_SHORT).show();
             }
         }
@@ -272,33 +247,7 @@ public class MainActivity extends AppCompatActivity {
         return downloadModels.get(0);
     }
 
-    private boolean pauseDownload(DownloadModel downloadModel) {
-        int updatedRow=0;
-        ContentValues contentValues=new ContentValues();
-        contentValues.put("control",1);
 
-        try{
-            updatedRow=getContentResolver().update(Uri.parse("content://downloads/my_downloads"),contentValues,"title=?",new String[]{downloadModel.getTitle()});
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        return 0<updatedRow;
-    }
-
-    private boolean resumeDownload(DownloadModel downloadModel) {
-        int updatedRow=0;
-        ContentValues contentValues=new ContentValues();
-        contentValues.put("control",0);
-
-        try{
-            updatedRow=getContentResolver().update(Uri.parse("content://downloads/my_downloads"),contentValues,"title=?",new String[]{downloadModel.getTitle()});
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        return 0<updatedRow;
-    }
 
     @Override
     protected void onDestroy() {
