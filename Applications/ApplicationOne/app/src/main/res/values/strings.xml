@@ -2,4 +2,11 @@
     <string name="app_name">Code</string>
     <string name="initiate_download">Download</string>
     <string name="check_if_file_exists">Check file exists</string>
+
+    <string name="str_pause">PAUSE</string>
+    <string name="str_resume">RESUME</string>
+    <string name="str_running">Running</string>
+
+    <string name="str_desc_downloading">Downloading</string>
+
 </resources>

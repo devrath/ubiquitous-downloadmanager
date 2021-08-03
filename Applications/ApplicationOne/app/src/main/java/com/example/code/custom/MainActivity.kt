@@ -14,6 +14,7 @@ import android.webkit.URLUtil
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.code.R
 import com.example.code.custom.DownloadUtils.bytesIntoHumanReadable
 import com.example.code.custom.DownloadUtils.getStatusMessage
 import com.example.code.custom.DownloadUtils.pauseDownload
@@ -26,13 +27,16 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private const val PERMISSION_REQUEST_CODE = 101
         const val imageURL = "http://speedtest.ftp.otenet.gr/files/test10Mb.db"
+        const val pauseState = "PAUSE"
+        const val resumeState = "RESUME"
+        const val downloadingState = "Downloading"
+        const val completedState = "Completed"
     }
 
     var downloadPath = ""
     var filename = "test.db"
-    var downloadModels: MutableList<DownloadModel> = ArrayList()
+    var downloadData : DownloadModel = DownloadModel()
 
 
     private lateinit var binding: ActivityMainBinding
@@ -46,14 +50,17 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(onComplete)
+    }
+
     private fun setOnClickListener() {
         binding.apply {
             pauseResume.setOnClickListener { togglePauseResume() }
             initiateDownloadId.setOnClickListener { downloadFile(imageURL) }
         }
     }
-
-
 
     private fun setFilePath() {
         downloadPath = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
@@ -107,18 +114,17 @@ class MainActivity : AppCompatActivity() {
                 file_size = bytesIntoHumanReadable(bytesDownloaded.toLong())
                 progress = publishProgress
                 if (!status
-                        .equals("PAUSE", ignoreCase = true) && !status
-                        .equals("RESUME", ignoreCase = true)) {
+                        .equals(pauseState, ignoreCase = true) && !status
+                        .equals(resumeState, ignoreCase = true)) {
                     downloadModel.status = status
                 }
-
             }
 
             binding.apply {
-                fileTitle.text = downloadObject.title
-                fileStatus.text = downloadObject.status
-                fileProgress.progress = downloadObject.progress.toInt()
-                fileSize.text = "Downloaded : " + downloadObject.file_size
+                fileTitle.text = downloadData.title
+                fileStatus.text = downloadData.status
+                fileProgress.progress = downloadData.progress.toInt()
+                fileSize.text = "Downloaded : ".plus(downloadData.file_size)
             }
         }
     }
@@ -127,62 +133,65 @@ class MainActivity : AppCompatActivity() {
         val filename = URLUtil.guessFileName(url, null, null)
         val file = File(downloadPath, filename)
         var request: DownloadManager.Request? = null
+
         request = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            DownloadManager.Request(Uri.parse(url))
-                .setTitle(filename)
-                .setDescription("Downloading")
-                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-                .setDestinationUri(Uri.fromFile(file))
-                .setRequiresCharging(false)
-                .setAllowedOverMetered(true)
-                .setAllowedOverRoaming(true)
+            DownloadManager.Request(Uri.parse(url)).apply {
+                setTitle(filename)
+                setDescription(getString(R.string.str_desc_downloading))
+                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                setDestinationUri(Uri.fromFile(file))
+                setRequiresCharging(false)
+                setAllowedOverMetered(true)
+                setAllowedOverRoaming(true)
+            }
         } else {
-            DownloadManager.Request(Uri.parse(url))
-                .setTitle(filename)
-                .setDescription("Downloading")
-                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-                .setDestinationUri(Uri.fromFile(file))
-                .setAllowedOverMetered(true)
-                .setAllowedOverRoaming(true)
+            DownloadManager.Request(Uri.parse(url)).apply {
+                setTitle(filename)
+                setDescription(getString(R.string.str_desc_downloading))
+                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                setDestinationUri(Uri.fromFile(file))
+                setAllowedOverMetered(true)
+                setAllowedOverRoaming(true)
+            }
         }
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        var downloadId = downloadManager.enqueue(request)
+        val downloadEnquId = downloadManager.enqueue(request)
         val nextId = 1
-        val downloadModel = DownloadModel().apply {
+
+        downloadData = DownloadModel().apply {
             id = nextId.toLong()
-            status = "Downloading"
+            status = downloadingState
             title = filename
             file_size = "0"
             progress = "0"
             isIs_paused = false
-            downloadId = downloadId
+            downloadId = downloadEnquId
             file_path = ""
         }
-        downloadModels.add(downloadModel)
 
-        downloadStatusTaskViaCoroutine(downloadId,downloadModel)
+        downloadStatusTaskViaCoroutine(downloadData.downloadId,downloadData)
     }
 
 
 
 
     private fun togglePauseResume() {
-        val downloadModel = downloadObject
+        val downloadModel = downloadData
 
-        downloadObject.apply {
+        downloadData.apply {
             if (isIs_paused) {
                 isIs_paused = false
-                binding.pauseResume.text = "PAUSE"
-                status = "RESUME"
-                binding.fileStatus.text = "Running"
+                binding.pauseResume.text = getString(R.string.str_pause)
+                status = resumeState
+                binding.fileStatus.text = getString(R.string.str_running)
                 if (!resumeDownload(this@MainActivity, downloadModel)) {
                     Toast.makeText(this@MainActivity, "Failed to Resume", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 isIs_paused = true
-                binding.pauseResume.text = "RESUME"
-                status = "PAUSE"
-                binding.fileStatus.text = "PAUSE"
+                binding.pauseResume.text = getString(R.string.str_resume)
+                status = pauseState
+                binding.fileStatus.text = getString(R.string.str_pause)
                 if (!pauseDownload(this@MainActivity, downloadModel)) {
                     Toast.makeText(this@MainActivity, "Failed to Pause", Toast.LENGTH_SHORT).show()
                 }
@@ -192,38 +201,33 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private val downloadObject: DownloadModel
-        get() = downloadModels[0]
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(onComplete)
-    }
-
     private var onComplete: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-            val comp = changeItemWithStatus("Completed")
+            val comp = changeItemWithStatus(completedState)
             if (comp) {
-                val query = DownloadManager.Query()
-                query.setFilterById(id)
-                val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-                val cursor = downloadManager.query(DownloadManager.Query().setFilterById(id))
-                cursor.moveToFirst()
-                val downloaded_path = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))
-                setChangeItemFilePath(downloaded_path, id)
+                DownloadManager.Query().apply {
+                    setFilterById(id)
+                    val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+                    downloadManager.query(DownloadManager.Query().setFilterById(id)).apply {
+                        moveToFirst()
+                        getString(getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).apply {
+                            setChangeItemFilePath(this, id)
+                        }
+                    }
+                }
             }
         }
     }
 
     fun changeItemWithStatus(message: String): Boolean {
         val comp = true
-        downloadModels[0].status = message
+        downloadData.status = message
         return comp
     }
 
     fun setChangeItemFilePath(path: String, id: Long) {
-        downloadModels[0].file_path = path
+        downloadData.file_path = path
     }
 
 }
