@@ -29,7 +29,7 @@
                     android:layout_margin="5dp">
                     <ImageView
                         android:padding="5dp"
-                        android:src="@android:drawable/stat_sys_download_done"
+                        android:src="@drawable/ic_baseline_cloud_download_24"
                         android:layout_width="60dp"
                         android:layout_height="60dp"
                         app:tint="@color/colorAccent" />
@@ -46,7 +46,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
                         <ProgressBar
-                            android:progress="10"
+                            tools:progress="50"
                             android:id="@+id/file_progress"
                             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                             android:layout_width="match_parent"
@@ -57,14 +57,15 @@
                             android:layout_height="wrap_content">
                             <TextView
                                 android:layout_weight="1"
-                                android:text="Downloaded : 15MB"
+                                tools:text="@string/downloaded_15_mb"
+                                android:text="@string/downloaded_0_mb"
                                 android:layout_width="match_parent"
                                 android:id="@+id/file_size"
                                 style="@style/TextAppearance.AppCompat.Caption"
                                 android:layout_height="wrap_content"/>
                             <TextView
                                 android:layout_weight="1"
-                                android:text="Pending"
+                                android:text="@string/pending"
                                 android:gravity="end"
                                 android:id="@+id/file_status"
                                 android:layout_width="match_parent"
@@ -97,7 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="PAUSE"/>
+                    android:text="@string/str_pause"/>
             </LinearLayout>
 
 

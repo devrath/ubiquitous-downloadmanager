@@ -1,12 +1,14 @@
 <resources>
-    <string name="app_name">Code</string>
+    <string name="app_name">Download Manager Demo</string>
     <string name="initiate_download">Download</string>
     <string name="check_if_file_exists">Check file exists</string>
-
     <string name="str_pause">PAUSE</string>
     <string name="str_resume">RESUME</string>
     <string name="str_running">Running</string>
-
     <string name="str_desc_downloading">Downloading</string>
-
+    <string name="str_failed_to_resume">Failed to Resume</string>
+    <string name="str_failed_to_pause">Failed to Pause</string>
+    <string name="downloaded_15_mb">Downloaded : 15 MB</string>
+    <string name="downloaded_0_mb">Downloaded : 0 MB</string>
+    <string name="pending">Pending</string>
 </resources>

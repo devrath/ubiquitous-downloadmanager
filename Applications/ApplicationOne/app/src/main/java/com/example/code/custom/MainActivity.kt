@@ -121,6 +121,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             binding.apply {
+                // Update the UI
                 fileTitle.text = downloadData.title
                 fileStatus.text = downloadData.status
                 fileProgress.progress = downloadData.progress.toInt()
@@ -180,20 +181,26 @@ class MainActivity : AppCompatActivity() {
 
         downloadData.apply {
             if (isIs_paused) {
+                // Set the states
                 isIs_paused = false
-                binding.pauseResume.text = getString(R.string.str_pause)
                 status = resumeState
+                // Update the UI
+                binding.pauseResume.text = getString(R.string.str_pause)
                 binding.fileStatus.text = getString(R.string.str_running)
+                // Notify the download manager
                 if (!resumeDownload(this@MainActivity, downloadModel)) {
-                    Toast.makeText(this@MainActivity, "Failed to Resume", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, getString(R.string.str_failed_to_resume), Toast.LENGTH_SHORT).show()
                 }
             } else {
+                // Set the states
                 isIs_paused = true
-                binding.pauseResume.text = getString(R.string.str_resume)
                 status = pauseState
+                // Update the UI
+                binding.pauseResume.text = getString(R.string.str_resume)
                 binding.fileStatus.text = getString(R.string.str_pause)
+                // Notify the download manager
                 if (!pauseDownload(this@MainActivity, downloadModel)) {
-                    Toast.makeText(this@MainActivity, "Failed to Pause", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, getString(R.string.str_failed_to_pause), Toast.LENGTH_SHORT).show()
                 }
             }
         }
