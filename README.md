@@ -21,3 +21,7 @@ This repository contains the demo sample on how to use download manager to downl
 
 ## Tested on simulator with configuration
 ![Banner](https://github.com/devrath/ubiquitous-kotlin-downloadmanager/blob/main/assets/simulatorSettings.png)
+
+<p align="center">
+<a><img src="https://forthebadge.com/images/badges/built-for-android.svg"></a>
+</p>
