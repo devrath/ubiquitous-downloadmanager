@@ -7,7 +7,6 @@
     tools:context=".custom.MainActivity">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/downloadWidgetId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,8 +24,9 @@
                 <LinearLayout
                     android:id="@+id/line1"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_height="wrap_content">
+                    android:layout_margin="5dp">
                     <ImageView
                         android:padding="5dp"
                         android:src="@android:drawable/stat_sys_download_done"
@@ -34,11 +34,10 @@
                         android:layout_height="60dp"
                         app:tint="@color/colorAccent" />
                     <LinearLayout
-                        android:layout_marginRight="80dp"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="80dp">
+                        android:orientation="vertical"
+                        android:layout_weight="1">
                         <TextView
                             style="@style/TextAppearance.AppCompat.Subhead"
                             android:padding="5dp"
@@ -73,27 +72,6 @@
                                 android:layout_height="wrap_content"/>
                         </LinearLayout>
                     </LinearLayout>
-                    <LinearLayout
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="-70dp"
-                        android:layout_width="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_height="match_parent">
-                        <Button
-                            android:id="@+id/pause_resume"
-                            android:text="PAUSE"
-                            style="@style/Widget.AppCompat.Button.Colored"
-                            android:layout_width="wrap_content"
-                            android:padding="0dp"
-                            android:layout_height="30dp"/>
-                        <Button
-                            android:id="@+id/sharefile"
-                            android:text="SHARE"
-                            style="@style/Widget.AppCompat.Button.Colored"
-                            android:layout_width="wrap_content"
-                            android:padding="0dp"
-                            android:layout_height="30dp"/>
-                    </LinearLayout>
                 </LinearLayout>
                 <View
                     android:layout_below="@id/line1"
@@ -115,11 +93,11 @@
                     android:layout_weight="1"
                     android:text="@string/initiate_download"/>
                 <Button
-                    android:id="@+id/chkIfFileExistsId"
+                    android:id="@+id/pause_resume"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/check_if_file_exists"/>
+                    android:text="PAUSE"/>
             </LinearLayout>
 
 
