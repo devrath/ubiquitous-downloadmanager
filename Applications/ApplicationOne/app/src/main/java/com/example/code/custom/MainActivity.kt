@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -15,10 +14,10 @@ import android.webkit.URLUtil
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.code.custom.DisplayFileSize.bytesIntoHumanReadable
-import com.example.code.custom.DisplayFileSize.getStatusMessage
-import com.example.code.custom.DisplayFileSize.pauseDownload
-import com.example.code.custom.DisplayFileSize.resumeDownload
+import com.example.code.custom.DownloadUtils.bytesIntoHumanReadable
+import com.example.code.custom.DownloadUtils.getStatusMessage
+import com.example.code.custom.DownloadUtils.pauseDownload
+import com.example.code.custom.DownloadUtils.resumeDownload
 import com.example.code.databinding.ActivityMainBinding
 import java.io.File
 import java.util.*
@@ -98,28 +97,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     private  fun publishProgress(
-        progress: String,
+        publishProgress: String,
         bytesDownloaded: String,
         status: String,
         downloadModel: DownloadModel
     ) {
         runOnUiThread {
             downloadModel.apply {
-                setFile_size(bytesIntoHumanReadable(bytesDownloaded.toLong()))
-                setProgress(progress)
-                if (!getStatus()
-                        .equals("PAUSE", ignoreCase = true) && !getStatus()
+                file_size = bytesIntoHumanReadable(bytesDownloaded.toLong())
+                progress = publishProgress
+                if (!status
+                        .equals("PAUSE", ignoreCase = true) && !status
                         .equals("RESUME", ignoreCase = true)) {
-                    downloadModel.setStatus(status)
+                    downloadModel.status = status
                 }
 
             }
 
             binding.apply {
-                fileTitle.text = downloadObject.getTitle()
-                fileStatus.text = downloadObject.getStatus()
-                fileProgress.progress = downloadObject.getProgress().toInt()
-                fileSize.text = "Downloaded : " + downloadObject.getFile_size()
+                fileTitle.text = downloadObject.title
+                fileStatus.text = downloadObject.status
+                fileProgress.progress = downloadObject.progress.toInt()
+                fileSize.text = "Downloaded : " + downloadObject.file_size
             }
         }
     }
@@ -147,17 +146,17 @@ class MainActivity : AppCompatActivity() {
                 .setAllowedOverRoaming(true)
         }
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        val downloadId = downloadManager.enqueue(request)
+        var downloadId = downloadManager.enqueue(request)
         val nextId = 1
         val downloadModel = DownloadModel().apply {
-            setId(nextId.toLong())
-            setStatus("Downloading")
-            setTitle(filename)
-            setFile_size("0")
-            setProgress("0")
+            id = nextId.toLong()
+            status = "Downloading"
+            title = filename
+            file_size = "0"
+            progress = "0"
             isIs_paused = false
-            setDownloadId(downloadId)
-            setFile_path("")
+            downloadId = downloadId
+            file_path = ""
         }
         downloadModels.add(downloadModel)
 
@@ -174,7 +173,7 @@ class MainActivity : AppCompatActivity() {
             if (isIs_paused) {
                 isIs_paused = false
                 binding.pauseResume.text = "PAUSE"
-                setStatus("RESUME")
+                status = "RESUME"
                 binding.fileStatus.text = "Running"
                 if (!resumeDownload(this@MainActivity, downloadModel)) {
                     Toast.makeText(this@MainActivity, "Failed to Resume", Toast.LENGTH_SHORT).show()
@@ -182,7 +181,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 isIs_paused = true
                 binding.pauseResume.text = "RESUME"
-                setStatus("PAUSE")
+                status = "PAUSE"
                 binding.fileStatus.text = "PAUSE"
                 if (!pauseDownload(this@MainActivity, downloadModel)) {
                     Toast.makeText(this@MainActivity, "Failed to Pause", Toast.LENGTH_SHORT).show()
@@ -217,14 +216,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun changeItemWithStatus(message: String?): Boolean {
+    fun changeItemWithStatus(message: String): Boolean {
         val comp = true
-        downloadModels[0].setStatus(message)
+        downloadModels[0].status = message
         return comp
     }
 
-    fun setChangeItemFilePath(path: String?, id: Long) {
-        downloadModels[0].setFile_path(path)
+    fun setChangeItemFilePath(path: String, id: Long) {
+        downloadModels[0].file_path = path
     }
 
 }

@@ -8,7 +8,7 @@ import android.database.Cursor
 import android.net.Uri
 
 @SuppressLint("Range")
-object DisplayFileSize {
+object DownloadUtils {
 
     private const val downloadUri = "content://downloads/my_downloads"
 
@@ -49,7 +49,7 @@ object DisplayFileSize {
                 Uri.parse(downloadUri),
                 contentValues,
                 "title=?",
-                arrayOf(downloadModel.getTitle())
+                arrayOf(downloadModel.title)
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -66,7 +66,7 @@ object DisplayFileSize {
                 Uri.parse(downloadUri),
                 contentValues,
                 "title=?",
-                arrayOf(downloadModel.getTitle())
+                arrayOf(downloadModel.title)
             )
         } catch (e: Exception) {
             e.printStackTrace()
