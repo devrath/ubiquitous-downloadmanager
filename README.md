@@ -15,3 +15,9 @@ This repository contains the demo sample on how to use download manager to downl
 3. No runtime permission was needed
 4. Pause/Resume functionality is provided
 5. When the download is in progress, there is a notification visible in the notification bar  
+
+## Output
+![Banner](https://github.com/devrath/ubiquitous-kotlin-downloadmanager/blob/main/assets/output.jpg)
+
+## Tested on simulator with configuration
+![Banner](https://github.com/devrath/ubiquitous-kotlin-downloadmanager/blob/main/assets/simulatorSettings.png)
