@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity() {
             DownloadManager.Request(Uri.parse(url)).apply {
                 setTitle(filename)
                 setDescription(getString(R.string.str_desc_downloading))
-                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
                 setDestinationUri(Uri.fromFile(file))
                 setRequiresCharging(false)
                 setAllowedOverMetered(true)
@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
             DownloadManager.Request(Uri.parse(url)).apply {
                 setTitle(filename)
                 setDescription(getString(R.string.str_desc_downloading))
-                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
                 setDestinationUri(Uri.fromFile(file))
                 setAllowedOverMetered(true)
                 setAllowedOverRoaming(true)
