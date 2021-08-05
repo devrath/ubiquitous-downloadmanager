@@ -20,7 +20,7 @@ class DownloadReceiver : BroadcastReceiver() {
         intent.action?.apply {
             when {
                 equals(FILTER_DOWNLOAD_PAUSE) -> {
-                    downloadedData.isIs_paused = true
+                    downloadedData.isPaused = true
                     downloadedData.status = Constants.pauseState
 
                     if (!DownloadUtils.pauseDownload(context)) {
@@ -28,7 +28,12 @@ class DownloadReceiver : BroadcastReceiver() {
                     }
                 }
                 equals(FILTER_DOWNLOAD_RESUME) -> {
-                    // Action 2
+                    downloadedData.isPaused = false
+                    downloadedData.status = Constants.resumeState
+
+                    if (!DownloadUtils.resumeDownload(context)) {
+                        Toast.makeText(context, context.getString(R.string.str_failed_to_pause), Toast.LENGTH_SHORT).show()
+                    }
                 }
                 equals(FILTER_DOWNLOAD_CANCEL) -> cancelProgressNotification(context)
             }

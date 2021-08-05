@@ -103,7 +103,12 @@ class MainActivity : AppCompatActivity() {
 
                         downloadModel.apply {
                             val fileSizeDownloaded = bytesIntoHumanReadable(bytesDownloaded.toLong())
-                            updateProgressNotification(this@MainActivity, 100, progress, fileSizeDownloaded)
+                            updateProgressNotification(
+                                    context = this@MainActivity,
+                                    max = 100, progress = progress,
+                                    fileSizeDownloaded = fileSizeDownloaded,
+                                    isDownloadPaused = isPaused
+                            )
                         }
 
                         publishProgress(progress.toString(), bytesDownloaded.toString(), status, downloadModel)
@@ -173,7 +178,7 @@ class MainActivity : AppCompatActivity() {
             title = filename
             file_size = "0"
             progress = "0"
-            isIs_paused = false
+            isPaused = false
             downloadId = downloadEnqueueId
             file_path = ""
         }

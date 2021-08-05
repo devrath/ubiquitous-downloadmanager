@@ -7,6 +7,6 @@ class DownloadModel {
     var progress: String = ""
     var status: String = ""
     var file_size: String = ""
-    var isIs_paused = false
+    var isPaused = false
     var isCancelled = false
 }
