@@ -1,20 +1,16 @@
-package com.example.code.custom.recievers
+package com.example.code.custom
 
 import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.code.R
-import com.example.code.custom.Constants
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_CANCEL
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_COMPLETE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_PAUSE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_RESUME
 import com.example.code.custom.DownloadData.downloadedData
-import com.example.code.custom.DownloadUtils
 import com.example.code.custom.DownloadUtils.togglePauseResumeDownload
 import com.example.code.custom.ProgressNotification.cancelProgressNotification
 
@@ -46,12 +42,14 @@ class DownloadReceiver : BroadcastReceiver() {
                         downloadManager.query(DownloadManager.Query().setFilterById(id)).apply {
                             moveToFirst()
                             getString(getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).apply {
-                                downloadedData.file_path = this
+                                downloadedData.filePath = this
                             }
                         }
                     }
                 }
-                equals(FILTER_DOWNLOAD_CANCEL) -> cancelProgressNotification(context)
+                equals(FILTER_DOWNLOAD_CANCEL) -> {
+                    cancelProgressNotification(context)
+                }
             }
         }
 

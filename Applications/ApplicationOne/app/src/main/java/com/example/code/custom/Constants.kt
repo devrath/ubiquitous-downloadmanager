@@ -26,4 +26,16 @@ object Constants {
     const val FILTER_DOWNLOAD_CANCEL = "com.example.code.DOWNLOAD_CANCEL"
     const val FILTER_DOWNLOAD_COMPLETE = DownloadManager.ACTION_DOWNLOAD_COMPLETE
 
+
+    private const val UNIQUE_WORK_NAME = "UNIQUE_WORK_NAME"
+
+
+
+    const val DOWNLOAD_STATUS_FAILED = "Failed"
+    const val DOWNLOAD_STATUS_PAUSED = "Paused"
+    const val DOWNLOAD_STATUS_RUNNING = "Running"
+    const val DOWNLOAD_STATUS_COMPLETED = "Completed"
+    const val DOWNLOAD_STATUS_PENDING = "Pending"
+
+
 }

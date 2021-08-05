@@ -6,6 +6,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import com.example.code.custom.Constants.DOWNLOAD_STATUS_COMPLETED
+import com.example.code.custom.Constants.DOWNLOAD_STATUS_FAILED
+import com.example.code.custom.Constants.DOWNLOAD_STATUS_PAUSED
+import com.example.code.custom.Constants.DOWNLOAD_STATUS_PENDING
+import com.example.code.custom.Constants.DOWNLOAD_STATUS_RUNNING
 import com.example.code.custom.DownloadData.downloadedData
 
 @SuppressLint("Range")
@@ -31,11 +36,11 @@ object DownloadUtils {
     fun getStatusMessage(cursor: Cursor): String {
         var msg = "-"
         msg = when (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {
-            DownloadManager.STATUS_FAILED -> "Failed"
-            DownloadManager.STATUS_PAUSED -> "Paused"
-            DownloadManager.STATUS_RUNNING -> "Running"
-            DownloadManager.STATUS_SUCCESSFUL -> "Completed"
-            DownloadManager.STATUS_PENDING -> "Pending"
+            DownloadManager.STATUS_FAILED -> DOWNLOAD_STATUS_FAILED
+            DownloadManager.STATUS_PAUSED -> DOWNLOAD_STATUS_PAUSED
+            DownloadManager.STATUS_RUNNING -> DOWNLOAD_STATUS_RUNNING
+            DownloadManager.STATUS_SUCCESSFUL -> DOWNLOAD_STATUS_COMPLETED
+            DownloadManager.STATUS_PENDING -> DOWNLOAD_STATUS_PENDING
             else -> "Unknown"
         }
         return msg

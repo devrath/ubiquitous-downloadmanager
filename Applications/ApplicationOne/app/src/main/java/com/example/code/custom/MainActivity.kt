@@ -10,6 +10,7 @@ import android.webkit.URLUtil
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.work.*
 import com.example.code.R
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_CANCEL
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_COMPLETE
@@ -17,15 +18,8 @@ import com.example.code.custom.Constants.FILTER_DOWNLOAD_PAUSE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_RESUME
 import com.example.code.custom.Constants.downloadingState
 import com.example.code.custom.Constants.imageURL
-import com.example.code.custom.Constants.pauseState
-import com.example.code.custom.Constants.resumeState
 import com.example.code.custom.DownloadData.downloadedData
-import com.example.code.custom.DownloadUtils.bytesIntoHumanReadable
-import com.example.code.custom.DownloadUtils.getStatusMessage
 import com.example.code.custom.NotificationChannelApiLevel.isDownloadManagerEqualOrAbove
-import com.example.code.custom.ProgressNotification.cancelProgressNotification
-import com.example.code.custom.ProgressNotification.updateProgressNotification
-import com.example.code.custom.recievers.DownloadReceiver
 import com.example.code.databinding.ActivityMainBinding
 import java.io.File
 import java.util.*
@@ -72,81 +66,7 @@ class MainActivity : AppCompatActivity() {
         downloadPath = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
     }
 
-    private fun downloadStatusTaskViaCoroutine(id: Long, downloadModel: DownloadModel) {
-        lifecycleScope.executeAsyncTask(onPreExecute = {
-            // ...
-        }, doInBackground = {
-            downloadFileProcess(id, downloadModel)
-        }, onPostExecute = {
-            // ... here "it" is a data returned from "doInBackground"
-            Toast.makeText(this@MainActivity, it, Toast.LENGTH_LONG).show()
-        })
-    }
 
-    private fun downloadFileProcess(downloadId: Long, downloadModel: DownloadModel): String {
-        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        var downloading = true
-        while (downloading) {
-            DownloadManager.Query().apply {
-                setFilterById(downloadId)
-                downloadManager.query(this).apply {
-                    if(downloadModel.isCancelled){
-                        close()
-                        cancelProgressNotification(this@MainActivity)
-                        downloading = false
-                    }else{
-                        moveToFirst()
-                        val bytesDownloaded = getInt(getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
-                        val totalSize = getInt(getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
-                        if (getInt(getColumnIndex(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
-                            downloading = false
-                        }
-                        val progress = (bytesDownloaded * 100L / totalSize).toInt()
-                        val status = getStatusMessage(this)
-
-                        downloadModel.apply {
-                            val fileSizeDownloaded = bytesIntoHumanReadable(bytesDownloaded.toLong())
-                            updateProgressNotification(
-                                    context = this@MainActivity,
-                                    max = 100, progress = progress,
-                                    fileSizeDownloaded = fileSizeDownloaded,
-                                    isDownloadPaused = isPaused
-                            )
-                        }
-
-                        publishProgress(progress.toString(), bytesDownloaded.toString(), status, downloadModel)
-                        if(progress==100){
-                            cancelProgressNotification(this@MainActivity)
-                        }
-                        close()
-                    }
-                }
-            }
-
-        }
-
-        return downloadModel.status
-    }
-
-    private  fun publishProgress(
-            publishProgress: String,
-            bytesDownloaded: String,
-            status: String,
-            downloadModel: DownloadModel
-    ) {
-        runOnUiThread {
-            downloadModel.apply {
-                file_size = bytesIntoHumanReadable(bytesDownloaded.toLong())
-                progress = publishProgress
-                if (!status
-                        .equals(pauseState, ignoreCase = true) && !status
-                        .equals(resumeState, ignoreCase = true)) {
-                    downloadModel.status = status
-                }
-            }
-
-        }
-    }
 
     private fun downloadFile(url: String) {
         val filename = URLUtil.guessFileName(url, null, null)
@@ -179,14 +99,21 @@ class MainActivity : AppCompatActivity() {
         downloadedData = DownloadModel().apply {
             status = downloadingState
             title = filename
-            file_size = "0"
+            fileSize = "0"
             progress = "0"
             isPaused = false
             downloadId = downloadEnqueueId
-            file_path = ""
+            filePath = ""
         }
 
-        downloadStatusTaskViaCoroutine(downloadedData.downloadId, downloadedData)
+        //downloadStatusTaskViaCoroutine(downloadedData.downloadId, downloadedData)
+        WorkManager.getInstance(this@MainActivity).enqueue(work)
     }
+
+    // Build the OnetimeWorkRequest
+    private val work = OneTimeWorkRequestBuilder<DownloadWorker>()
+            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+            .build()
+
 
 }
