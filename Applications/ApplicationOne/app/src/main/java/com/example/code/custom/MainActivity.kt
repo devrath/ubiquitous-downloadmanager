@@ -2,9 +2,6 @@ package com.example.code.custom
 
 import android.annotation.SuppressLint
 import android.app.DownloadManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
@@ -15,9 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.code.R
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_CANCEL
+import com.example.code.custom.Constants.FILTER_DOWNLOAD_COMPLETE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_PAUSE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_RESUME
-import com.example.code.custom.Constants.completedState
 import com.example.code.custom.Constants.downloadingState
 import com.example.code.custom.Constants.imageURL
 import com.example.code.custom.Constants.pauseState
@@ -48,12 +45,21 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setOnClickListener()
         setFilePath()
-        registerReceiver(onComplete, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(onComplete)
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(receiver, IntentFilter().apply {
+            addAction(FILTER_DOWNLOAD_PAUSE)
+            addAction(FILTER_DOWNLOAD_RESUME)
+            addAction(FILTER_DOWNLOAD_CANCEL)
+            addAction(FILTER_DOWNLOAD_COMPLETE)
+        })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(receiver)
     }
 
     private fun setOnClickListener() {
@@ -182,42 +188,5 @@ class MainActivity : AppCompatActivity() {
 
         downloadStatusTaskViaCoroutine(downloadedData.downloadId, downloadedData)
     }
-
-
-    private var onComplete: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-
-            downloadedData.status = completedState
-
-            DownloadManager.Query().apply {
-                setFilterById(id)
-                val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-                downloadManager.query(DownloadManager.Query().setFilterById(id)).apply {
-                    moveToFirst()
-                    getString(getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).apply {
-                        downloadedData.file_path = this
-                    }
-                }
-            }
-        }
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        registerReceiver(receiver, IntentFilter().apply {
-            addAction(FILTER_DOWNLOAD_PAUSE)
-            addAction(FILTER_DOWNLOAD_RESUME)
-            addAction(FILTER_DOWNLOAD_CANCEL)
-        })
-    }
-
-    override fun onPause() {
-        super.onPause()
-        unregisterReceiver(receiver)
-    }
-
-
 
 }

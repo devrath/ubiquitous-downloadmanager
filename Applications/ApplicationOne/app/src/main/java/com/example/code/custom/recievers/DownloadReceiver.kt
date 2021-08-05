@@ -1,12 +1,16 @@
 package com.example.code.custom.recievers
 
+import android.annotation.SuppressLint
+import android.app.DownloadManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.code.R
 import com.example.code.custom.Constants
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_CANCEL
+import com.example.code.custom.Constants.FILTER_DOWNLOAD_COMPLETE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_PAUSE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_RESUME
 import com.example.code.custom.DownloadData.downloadedData
@@ -16,6 +20,7 @@ import com.example.code.custom.ProgressNotification.cancelProgressNotification
 
 class DownloadReceiver : BroadcastReceiver() {
 
+    @SuppressLint("Range")
     override fun onReceive(context: Context, intent: Intent) {
 
         intent.action?.apply {
@@ -29,6 +34,22 @@ class DownloadReceiver : BroadcastReceiver() {
                     downloadedData.isPaused = false
                     downloadedData.status = Constants.resumeState
                     togglePauseResumeDownload(context = context,pauseDownload = false)
+                }
+                equals(FILTER_DOWNLOAD_COMPLETE) -> {
+                    val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+
+                    downloadedData.status = Constants.completedState
+
+                    DownloadManager.Query().apply {
+                        setFilterById(id)
+                        val downloadManager = context.getSystemService(AppCompatActivity.DOWNLOAD_SERVICE) as DownloadManager
+                        downloadManager.query(DownloadManager.Query().setFilterById(id)).apply {
+                            moveToFirst()
+                            getString(getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).apply {
+                                downloadedData.file_path = this
+                            }
+                        }
+                    }
                 }
                 equals(FILTER_DOWNLOAD_CANCEL) -> cancelProgressNotification(context)
             }

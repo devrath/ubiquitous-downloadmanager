@@ -1,5 +1,7 @@
 package com.example.code.custom
 
+import android.app.DownloadManager
+
 object Constants {
     const val DOWNLOAD_ID = 6
     const val CHANNEL_6_ID = "channel6"
@@ -22,5 +24,6 @@ object Constants {
     const val FILTER_DOWNLOAD_PAUSE = "com.example.code.DOWNLOAD_PAUSE"
     const val FILTER_DOWNLOAD_RESUME = "com.example.code.DOWNLOAD_RESUME"
     const val FILTER_DOWNLOAD_CANCEL = "com.example.code.DOWNLOAD_CANCEL"
+    const val FILTER_DOWNLOAD_COMPLETE = DownloadManager.ACTION_DOWNLOAD_COMPLETE
 
 }
