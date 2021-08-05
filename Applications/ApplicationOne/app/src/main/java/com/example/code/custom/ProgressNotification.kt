@@ -16,10 +16,8 @@ object ProgressNotification {
 
     fun progressInNotification(activity: Context) {
         activity.let {
-
             NotificationManager.getNotificationManager(activity)?.apply { notify(DOWNLOAD_ID,  prepareNotification(it).build()) }
             updateProgressNotification(activity)
-
         }
     }
 
