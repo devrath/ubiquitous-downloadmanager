@@ -9,4 +9,10 @@ object NotificationChannelApiLevel {
         // Notification channel is not present in lower API levels
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
     }
+
+    fun isDownloadManagerEqualOrAbove(): Boolean {
+        // certain features of download manager is available for Nogut and higher
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+    }
+
 }

@@ -16,4 +16,11 @@ object Constants {
     const val resumeState = "RESUME"
     const val downloadingState = "Downloading"
     const val completedState = "Completed"
+
+
+
+    const val FILTER_DOWNLOAD_PAUSE = "com.example.code.DOWNLOAD_PAUSE"
+    const val FILTER_DOWNLOAD_RESUME = "com.example.code.DOWNLOAD_RESUME"
+    const val FILTER_DOWNLOAD_CANCEL = "com.example.code.DOWNLOAD_CANCEL"
+
 }
