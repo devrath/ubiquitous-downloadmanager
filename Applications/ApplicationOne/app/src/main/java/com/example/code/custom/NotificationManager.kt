@@ -2,7 +2,6 @@ package com.example.code.custom
 
 import android.app.NotificationManager
 import android.content.Context
-import com.example.notification.utils.NotificationChannelApiLevel
 
 object NotificationManager {
     fun getNotificationManager(context: Context?): NotificationManager? {
