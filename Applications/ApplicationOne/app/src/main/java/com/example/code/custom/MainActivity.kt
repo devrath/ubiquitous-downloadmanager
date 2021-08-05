@@ -19,6 +19,7 @@ import com.example.code.custom.DownloadUtils.bytesIntoHumanReadable
 import com.example.code.custom.DownloadUtils.getStatusMessage
 import com.example.code.custom.DownloadUtils.pauseDownload
 import com.example.code.custom.DownloadUtils.resumeDownload
+import com.example.code.custom.ProgressNotification.progressInNotification
 import com.example.code.databinding.ActivityMainBinding
 import java.io.File
 import java.util.*
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             pauseResume.setOnClickListener { togglePauseResume() }
             initiateDownloadId.setOnClickListener { downloadFile(imageURL) }
+            launchNotificationId.setOnClickListener { progressInNotification(this@MainActivity,"Title","Message") }
         }
     }
 

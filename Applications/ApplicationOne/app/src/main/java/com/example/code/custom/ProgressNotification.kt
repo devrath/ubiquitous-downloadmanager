@@ -10,8 +10,8 @@ import com.example.code.custom.Constants.CHANNEL_6_ID
 import com.example.notification.utils.NotificationManager
 
 object ProgressNotification {
-    private fun progressInNotification(activity: Context, title: String, message: String) {
-        activity?.let {
+    fun progressInNotification(activity: Context, title: String, message: String) {
+        activity.let {
 
             /*
              * Broadcast Receiver:  As a intent in action click

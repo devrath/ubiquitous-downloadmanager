@@ -11,4 +11,5 @@
     <string name="downloaded_15_mb">Downloaded : 15 MB</string>
     <string name="downloaded_0_mb">Downloaded : 0 MB</string>
     <string name="pending">Pending</string>
+    <string name="notification">Notification</string>
 </resources>
