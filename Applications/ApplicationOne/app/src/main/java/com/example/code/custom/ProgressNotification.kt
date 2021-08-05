@@ -17,11 +17,9 @@ object ProgressNotification {
     fun progressInNotification(activity: Context) {
         activity.let {
 
-            val notification: NotificationCompat.Builder = prepareNotification(it)
-
-            NotificationManager.getNotificationManager(activity)?.apply { notify(DOWNLOAD_ID, notification.build()) }
-
+            NotificationManager.getNotificationManager(activity)?.apply { notify(DOWNLOAD_ID,  prepareNotification(it).build()) }
             updateProgressNotification(activity)
+
         }
     }
 
@@ -44,7 +42,7 @@ object ProgressNotification {
     }
 
     private fun updateProgressNotification(context: Context) {
-        val notification: NotificationCompat.Builder = prepareNotification(context)
+        val notification = prepareNotification(context)
 
         Thread {
             SystemClock.sleep(2000)
