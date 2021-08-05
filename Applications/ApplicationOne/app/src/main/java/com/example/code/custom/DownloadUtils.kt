@@ -41,33 +41,19 @@ object DownloadUtils {
         return msg
     }
 
-    fun pauseDownload(context: Context): Boolean {
+    fun togglePauseResumeDownload(context: Context,pauseDownload:Boolean): Boolean {
         var updatedRow = 0
         val contentValues = ContentValues()
-        contentValues.put("control", 1)
-        try {
-            updatedRow = context.contentResolver.update(
-                Uri.parse(downloadUri),
-                contentValues,
-                "title=?",
-                arrayOf(downloadedData.title)
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
+        when {
+            pauseDownload -> contentValues.put("control", 1)
+            else -> contentValues.put("control", 0)
         }
-        return 0 < updatedRow
-    }
-
-    fun resumeDownload(context: Context): Boolean {
-        var updatedRow = 0
-        val contentValues = ContentValues()
-        contentValues.put("control", 0)
         try {
             updatedRow = context.contentResolver.update(
-                Uri.parse(downloadUri),
-                contentValues,
-                "title=?",
-                arrayOf(downloadedData.title)
+                    Uri.parse(downloadUri),
+                    contentValues,
+                    "title=?",
+                    arrayOf(downloadedData.title)
             )
         } catch (e: Exception) {
             e.printStackTrace()

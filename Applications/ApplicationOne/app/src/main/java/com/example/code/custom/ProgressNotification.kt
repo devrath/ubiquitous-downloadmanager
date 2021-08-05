@@ -15,7 +15,21 @@ import com.example.code.custom.DownloadData.downloadedData
 
 object ProgressNotification {
 
-    const val progressMax = 100
+    private const val progressMax = 100
+
+    fun updateProgressNotification(context: Context, max: Int, progress: Int, fileSizeDownloaded: String, isDownloadPaused: Boolean) {
+        val notification = prepareNotification(context,isDownloadPaused)
+        val messageToDisplay = fileSizeDownloaded.plus(" ").plus(context.getString(R.string.str_downloaded))
+        notification.setContentText(messageToDisplay)
+                .setProgress(max, progress, false)
+                .setOngoing(false)
+        NotificationManager.getNotificationManager(context)?.apply { notify(DOWNLOAD_ID, notification.build()) }
+    }
+
+    fun cancelProgressNotification(context: Context) {
+        NotificationManagerCompat.from(context).cancel(null, DOWNLOAD_ID);
+        downloadedData.isCancelled = true
+    }
 
     private fun prepareNotification(context: Context, isDownloadPaused: Boolean): NotificationCompat.Builder {
 
@@ -54,18 +68,4 @@ object ProgressNotification {
         }
     }
 
-    fun updateProgressNotification(context: Context, max: Int, progress: Int, fileSizeDownloaded: String, isDownloadPaused: Boolean) {
-        val notification = prepareNotification(context,isDownloadPaused)
-        val messageToDisplay = fileSizeDownloaded.plus(" ").plus(context.getString(R.string.str_downloaded))
-        notification.setContentText(messageToDisplay)
-                .setProgress(max, progress, false)
-                .setOngoing(false)
-        NotificationManager.getNotificationManager(context)?.apply { notify(DOWNLOAD_ID, notification.build()) }
-    }
-
-    fun cancelProgressNotification(context: Context) {
-        NotificationManagerCompat.from(context).cancel(null, DOWNLOAD_ID);
-
-        downloadedData.isCancelled = true
-    }
 }

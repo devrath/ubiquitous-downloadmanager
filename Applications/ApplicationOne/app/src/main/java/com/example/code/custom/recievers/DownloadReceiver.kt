@@ -11,6 +11,7 @@ import com.example.code.custom.Constants.FILTER_DOWNLOAD_PAUSE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_RESUME
 import com.example.code.custom.DownloadData.downloadedData
 import com.example.code.custom.DownloadUtils
+import com.example.code.custom.DownloadUtils.togglePauseResumeDownload
 import com.example.code.custom.ProgressNotification.cancelProgressNotification
 
 class DownloadReceiver : BroadcastReceiver() {
@@ -22,18 +23,12 @@ class DownloadReceiver : BroadcastReceiver() {
                 equals(FILTER_DOWNLOAD_PAUSE) -> {
                     downloadedData.isPaused = true
                     downloadedData.status = Constants.pauseState
-
-                    if (!DownloadUtils.pauseDownload(context)) {
-                        Toast.makeText(context, context.getString(R.string.str_failed_to_pause), Toast.LENGTH_SHORT).show()
-                    }
+                    togglePauseResumeDownload(context = context,pauseDownload = true)
                 }
                 equals(FILTER_DOWNLOAD_RESUME) -> {
                     downloadedData.isPaused = false
                     downloadedData.status = Constants.resumeState
-
-                    if (!DownloadUtils.resumeDownload(context)) {
-                        Toast.makeText(context, context.getString(R.string.str_failed_to_pause), Toast.LENGTH_SHORT).show()
-                    }
+                    togglePauseResumeDownload(context = context,pauseDownload = false)
                 }
                 equals(FILTER_DOWNLOAD_CANCEL) -> cancelProgressNotification(context)
             }

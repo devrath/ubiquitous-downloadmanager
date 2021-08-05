@@ -64,9 +64,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setFilePath() {
         downloadPath = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
-            .plus(File.separator)
-            .plus("Devrath")
-            .plus(File.separator)
     }
 
     private fun downloadStatusTaskViaCoroutine(id: Long, downloadModel: DownloadModel) {

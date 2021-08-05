@@ -6,99 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".custom.MainActivity">
 
-    <androidx.cardview.widget.CardView
+    <Button
+        android:id="@+id/initiateDownloadId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/initiate_download"
+        android:layout_margin="@dimen/download_margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:id="@+id/main_rel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:id="@+id/line1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_margin="5dp">
-                    <ImageView
-                        android:padding="5dp"
-                        android:src="@drawable/ic_baseline_cloud_download_24"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        app:tint="@color/colorAccent" />
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_weight="1">
-                        <TextView
-                            style="@style/TextAppearance.AppCompat.Subhead"
-                            android:padding="5dp"
-                            android:text="File Name "
-                            android:id="@+id/file_title"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-                        <ProgressBar
-                            tools:progress="50"
-                            android:id="@+id/file_progress"
-                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-                        <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                            <TextView
-                                android:layout_weight="1"
-                                tools:text="@string/downloaded_15_mb"
-                                android:text="@string/downloaded_0_mb"
-                                android:layout_width="match_parent"
-                                android:id="@+id/file_size"
-                                style="@style/TextAppearance.AppCompat.Caption"
-                                android:layout_height="wrap_content"/>
-                            <TextView
-                                android:layout_weight="1"
-                                android:text="@string/pending"
-                                android:gravity="end"
-                                android:id="@+id/file_status"
-                                android:layout_width="match_parent"
-                                style="@style/TextAppearance.AppCompat.Caption"
-                                android:layout_height="wrap_content"/>
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-                <View
-                    android:layout_below="@id/line1"
-                    android:background="#606060"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"/>
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/initiateDownloadId"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/initiate_download"/>
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
