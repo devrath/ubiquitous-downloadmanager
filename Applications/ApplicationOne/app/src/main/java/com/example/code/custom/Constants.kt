@@ -11,6 +11,7 @@ object Constants {
     const val DOWNLOAD_RESUME = "DOWNLOAD_RESUME"
 
     const val imageURL = "http://speedtest.ftp.otenet.gr/files/test10Mb.db"
+    //const val imageURL = "https://mpl-dev-builds.s3.ap-south-1.amazonaws.com/2021-08-05/MPL_com.mpl.androidapp_debug_development_qa_1.0.134_development_qa_20210805_08_57_1000134_134_20210805_08_57_sealed_zip.apk"
     const val pauseState = "PAUSE"
     const val resumeState = "RESUME"
     const val downloadingState = "Downloading"

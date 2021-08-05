@@ -70,13 +70,13 @@ class MainActivity : AppCompatActivity() {
             // ...
         }, doInBackground = {
             downloadFileProcess(id,downloadModel)
-            "Result" // send data to "onPostExecute"
         }, onPostExecute = {
             // ... here "it" is a data returned from "doInBackground"
+            Toast.makeText(this@MainActivity,it,Toast.LENGTH_LONG).show()
         })
     }
 
-    private fun downloadFileProcess(downloadId: Long, downloadModel: DownloadModel) {
+    private fun downloadFileProcess(downloadId: Long, downloadModel: DownloadModel): String {
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         var downloading = true
         while (downloading) {
@@ -86,6 +86,7 @@ class MainActivity : AppCompatActivity() {
                     if(downloadModel.isCancelled){
                         close()
                         cancelProgressNotification(this@MainActivity)
+                        downloading = false
                     }else{
                         moveToFirst()
                         val bytesDownloaded = getInt(getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
@@ -98,11 +99,7 @@ class MainActivity : AppCompatActivity() {
 
                         downloadModel.apply {
                             val fileSizeDownloaded = bytesIntoHumanReadable(bytesDownloaded.toLong())
-                            if(isCancelled){
-                                close()
-                            }else{
-                                updateProgressNotification(this@MainActivity,100,progress,fileSizeDownloaded)
-                            }
+                            updateProgressNotification(this@MainActivity,100,progress,fileSizeDownloaded)
                         }
 
                         publishProgress(progress.toString(), bytesDownloaded.toString(), status,downloadModel)
@@ -115,6 +112,8 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+        return downloadModel.status
     }
 
     private  fun publishProgress(
@@ -134,13 +133,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            binding.apply {
-                // Update the UI
-                fileTitle.text = downloadedData.title
-                fileStatus.text = downloadedData.status
-                fileProgress.progress = downloadedData.progress.toInt()
-                fileSize.text = "Downloaded : ".plus(downloadedData.file_size)
-            }
         }
     }
 
