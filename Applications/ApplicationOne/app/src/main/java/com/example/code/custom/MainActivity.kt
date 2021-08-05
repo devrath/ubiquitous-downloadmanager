@@ -20,7 +20,6 @@ import com.example.code.custom.DownloadUtils.getStatusMessage
 import com.example.code.custom.DownloadUtils.pauseDownload
 import com.example.code.custom.DownloadUtils.resumeDownload
 import com.example.code.custom.ProgressNotification.cancelProgressNotification
-import com.example.code.custom.ProgressNotification.progressInNotification
 import com.example.code.custom.ProgressNotification.updateProgressNotificationTwo
 import com.example.code.databinding.ActivityMainBinding
 import java.io.File
