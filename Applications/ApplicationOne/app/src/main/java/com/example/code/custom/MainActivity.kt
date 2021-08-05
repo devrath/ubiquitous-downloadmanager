@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             pauseResume.setOnClickListener { togglePauseResume() }
             initiateDownloadId.setOnClickListener { downloadFile(imageURL) }
-            launchNotificationId.setOnClickListener { progressInNotification(this@MainActivity,"Title","Message") }
+            launchNotificationId.setOnClickListener { progressInNotification(this@MainActivity) }
         }
     }
 
