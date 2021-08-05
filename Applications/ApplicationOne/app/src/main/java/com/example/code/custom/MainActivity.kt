@@ -20,7 +20,7 @@ import com.example.code.custom.DownloadUtils.getStatusMessage
 import com.example.code.custom.DownloadUtils.pauseDownload
 import com.example.code.custom.DownloadUtils.resumeDownload
 import com.example.code.custom.ProgressNotification.cancelProgressNotification
-import com.example.code.custom.ProgressNotification.updateProgressNotificationTwo
+import com.example.code.custom.ProgressNotification.updateProgressNotification
 import com.example.code.databinding.ActivityMainBinding
 import java.io.File
 import java.util.*
@@ -97,7 +97,12 @@ class MainActivity : AppCompatActivity() {
                     }
                     val progress = (bytesDownloaded * 100L / totalSize).toInt()
                     val status = getStatusMessage(this)
-                    updateProgressNotificationTwo(this@MainActivity,100,progress)
+
+                    downloadModel.apply {
+                        val fileSizeDownloaded = bytesIntoHumanReadable(bytesDownloaded.toLong())
+                        updateProgressNotification(this@MainActivity,100,progress,fileSizeDownloaded)
+                    }
+
                     publishProgress(progress.toString(), bytesDownloaded.toString(), status,downloadModel)
                     if(progress==100){ cancelProgressNotification(this@MainActivity) }
                     close()

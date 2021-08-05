@@ -14,4 +14,5 @@
     <string name="notification">Progress</string>
     <string name="str_cancel">Cancel</string>
     <string name="str_downloading">Downloading…</string>
+    <string name="str_downloaded">Downloaded</string>
 </resources>

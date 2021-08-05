@@ -32,9 +32,10 @@ object ProgressNotification {
                 .setProgress(progressMax, 0, true)
     }
 
-    fun updateProgressNotificationTwo(context: Context,max: Int,progress:Int) {
+    fun updateProgressNotification(context: Context, max: Int, progress: Int, fileSizeDownloaded: String) {
         val notification = prepareNotification(context)
-        notification.setContentText(context.getString(R.string.str_downloading))
+        val messageToDisplay = fileSizeDownloaded.plus(" ").plus(context.getString(R.string.str_downloaded))
+        notification.setContentText(messageToDisplay)
                 .setProgress(max, progress, false)
                 .setOngoing(false)
         NotificationManager.getNotificationManager(context)?.apply { notify(DOWNLOAD_ID, notification.build()) }
