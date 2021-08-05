@@ -8,7 +8,6 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.code.R
 import com.example.code.custom.Constants.CHANNEL_6_ID
 import com.example.code.custom.Constants.DOWNLOAD_ID
-import com.example.notification.utils.NotificationManager
 
 object ProgressNotification {
 
