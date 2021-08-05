@@ -98,11 +98,17 @@ class MainActivity : AppCompatActivity() {
 
                     downloadModel.apply {
                         val fileSizeDownloaded = bytesIntoHumanReadable(bytesDownloaded.toLong())
-                        updateProgressNotification(this@MainActivity,100,progress,fileSizeDownloaded)
+                        if(isCancelled){
+                            close()
+                        }else{
+                            updateProgressNotification(this@MainActivity,100,progress,fileSizeDownloaded)
+                        }
                     }
 
                     publishProgress(progress.toString(), bytesDownloaded.toString(), status,downloadModel)
-                    if(progress==100){ cancelProgressNotification(this@MainActivity) }
+                    if(progress==100){
+                        cancelProgressNotification(this@MainActivity)
+                    }
                     close()
                 }
             }
@@ -164,10 +170,8 @@ class MainActivity : AppCompatActivity() {
         }
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         val downloadEnquId = downloadManager.enqueue(request)
-        val nextId = 1
 
         downloadedData = DownloadModel().apply {
-            id = nextId.toLong()
             status = downloadingState
             title = filename
             file_size = "0"
