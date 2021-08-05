@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import com.example.code.custom.DownloadData.downloadedData
 
 @SuppressLint("Range")
 object DownloadUtils {
@@ -40,7 +41,7 @@ object DownloadUtils {
         return msg
     }
 
-    fun pauseDownload(context: Context, downloadModel: DownloadModel): Boolean {
+    fun pauseDownload(context: Context): Boolean {
         var updatedRow = 0
         val contentValues = ContentValues()
         contentValues.put("control", 1)
@@ -49,7 +50,7 @@ object DownloadUtils {
                 Uri.parse(downloadUri),
                 contentValues,
                 "title=?",
-                arrayOf(downloadModel.title)
+                arrayOf(downloadedData.title)
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -57,7 +58,7 @@ object DownloadUtils {
         return 0 < updatedRow
     }
 
-    fun resumeDownload(context: Context, downloadModel: DownloadModel): Boolean {
+    fun resumeDownload(context: Context): Boolean {
         var updatedRow = 0
         val contentValues = ContentValues()
         contentValues.put("control", 0)
@@ -66,7 +67,7 @@ object DownloadUtils {
                 Uri.parse(downloadUri),
                 contentValues,
                 "title=?",
-                arrayOf(downloadModel.title)
+                arrayOf(downloadedData.title)
             )
         } catch (e: Exception) {
             e.printStackTrace()

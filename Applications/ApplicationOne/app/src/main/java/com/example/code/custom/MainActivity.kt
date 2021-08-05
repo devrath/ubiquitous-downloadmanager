@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.code.R
+import com.example.code.custom.DownloadData.downloadedData
 import com.example.code.custom.DownloadUtils.bytesIntoHumanReadable
 import com.example.code.custom.DownloadUtils.getStatusMessage
 import com.example.code.custom.DownloadUtils.pauseDownload
@@ -37,9 +38,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     var downloadPath = ""
-    var filename = "test.db"
-    var downloadData : DownloadModel = DownloadModel()
-
 
     private lateinit var binding: ActivityMainBinding
 
@@ -131,10 +129,10 @@ class MainActivity : AppCompatActivity() {
 
             binding.apply {
                 // Update the UI
-                fileTitle.text = downloadData.title
-                fileStatus.text = downloadData.status
-                fileProgress.progress = downloadData.progress.toInt()
-                fileSize.text = "Downloaded : ".plus(downloadData.file_size)
+                fileTitle.text = downloadedData.title
+                fileStatus.text = downloadedData.status
+                fileProgress.progress = downloadedData.progress.toInt()
+                fileSize.text = "Downloaded : ".plus(downloadedData.file_size)
             }
         }
     }
@@ -168,7 +166,7 @@ class MainActivity : AppCompatActivity() {
         val downloadEnquId = downloadManager.enqueue(request)
         val nextId = 1
 
-        downloadData = DownloadModel().apply {
+        downloadedData = DownloadModel().apply {
             id = nextId.toLong()
             status = downloadingState
             title = filename
@@ -179,16 +177,14 @@ class MainActivity : AppCompatActivity() {
             file_path = ""
         }
 
-        downloadStatusTaskViaCoroutine(downloadData.downloadId,downloadData)
+        downloadStatusTaskViaCoroutine(downloadedData.downloadId,downloadedData)
     }
 
 
 
 
     private fun togglePauseResume() {
-        val downloadModel = downloadData
-
-        downloadData.apply {
+        downloadedData.apply {
             if (isIs_paused) {
                 // Set the states
                 isIs_paused = false
@@ -197,7 +193,7 @@ class MainActivity : AppCompatActivity() {
                 binding.pauseResume.text = getString(R.string.str_pause)
                 binding.fileStatus.text = getString(R.string.str_running)
                 // Notify the download manager
-                if (!resumeDownload(this@MainActivity, downloadModel)) {
+                if (!resumeDownload(this@MainActivity)) {
                     Toast.makeText(this@MainActivity, getString(R.string.str_failed_to_resume), Toast.LENGTH_SHORT).show()
                 }
             } else {
@@ -208,7 +204,7 @@ class MainActivity : AppCompatActivity() {
                 binding.pauseResume.text = getString(R.string.str_resume)
                 binding.fileStatus.text = getString(R.string.str_pause)
                 // Notify the download manager
-                if (!pauseDownload(this@MainActivity, downloadModel)) {
+                if (!pauseDownload(this@MainActivity)) {
                     Toast.makeText(this@MainActivity, getString(R.string.str_failed_to_pause), Toast.LENGTH_SHORT).show()
                 }
             }
@@ -238,12 +234,12 @@ class MainActivity : AppCompatActivity() {
 
     fun changeItemWithStatus(message: String): Boolean {
         val comp = true
-        downloadData.status = message
+        downloadedData.status = message
         return comp
     }
 
     fun setChangeItemFilePath(path: String, id: Long) {
-        downloadData.file_path = path
+        downloadedData.file_path = path
     }
 
 }
