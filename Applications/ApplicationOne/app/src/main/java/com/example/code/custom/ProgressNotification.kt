@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.example.code.R
 import com.example.code.custom.Constants.CHANNEL_6_ID
 import com.example.code.custom.Constants.DOWNLOAD_ID
@@ -17,7 +18,6 @@ object ProgressNotification {
     fun progressInNotification(activity: Context) {
         activity.let {
             NotificationManager.getNotificationManager(activity)?.apply { notify(DOWNLOAD_ID,  prepareNotification(it).build()) }
-            updateProgressNotification(activity)
         }
     }
 
@@ -46,11 +46,7 @@ object ProgressNotification {
             SystemClock.sleep(2000)
             var progress = 0
             while (progress <= progressMax) {
-
-                /*notification.setProgress(progressMax, progress, false);
-                        notificationManager.notify(2, notification.build());*/SystemClock.sleep(
-                        1000
-                )
+                SystemClock.sleep(1000)
                 progress += 20
             }
             notification.setContentText("Download finished")
@@ -60,5 +56,17 @@ object ProgressNotification {
             NotificationManager.getNotificationManager(context)?.apply { notify(DOWNLOAD_ID, notification.build()) }
 
         }.start()
+    }
+
+    fun updateProgressNotificationTwo(context: Context,max: Int,progress:Int) {
+        val notification = prepareNotification(context)
+        notification.setContentText("Download finished")
+                .setProgress(max, progress, false)
+                .setOngoing(false)
+        NotificationManager.getNotificationManager(context)?.apply { notify(DOWNLOAD_ID, notification.build()) }
+    }
+
+    fun cancelProgressNotification(context: Context) {
+        NotificationManagerCompat.from(context).cancel(null, DOWNLOAD_ID);
     }
 }
