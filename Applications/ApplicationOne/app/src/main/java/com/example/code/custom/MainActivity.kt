@@ -15,6 +15,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.code.R
+import com.example.code.custom.Constants.completedState
+import com.example.code.custom.Constants.downloadingState
+import com.example.code.custom.Constants.imageURL
+import com.example.code.custom.Constants.pauseState
+import com.example.code.custom.Constants.resumeState
 import com.example.code.custom.DownloadData.downloadedData
 import com.example.code.custom.DownloadUtils.bytesIntoHumanReadable
 import com.example.code.custom.DownloadUtils.getStatusMessage
@@ -28,14 +33,6 @@ import java.util.*
 
 @SuppressLint("Range")
 class MainActivity : AppCompatActivity() {
-
-    companion object {
-        const val imageURL = "http://speedtest.ftp.otenet.gr/files/test10Mb.db"
-        const val pauseState = "PAUSE"
-        const val resumeState = "RESUME"
-        const val downloadingState = "Downloading"
-        const val completedState = "Completed"
-    }
 
     var downloadPath = ""
 
@@ -57,7 +54,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setOnClickListener() {
         binding.apply {
-            pauseResume.setOnClickListener { togglePauseResume() }
             initiateDownloadId.setOnClickListener { downloadFile(imageURL) }
         }
     }
@@ -87,29 +83,34 @@ class MainActivity : AppCompatActivity() {
             DownloadManager.Query().apply {
                 setFilterById(downloadId)
                 downloadManager.query(this).apply {
-                    moveToFirst()
-                    val bytesDownloaded = getInt(getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
-                    val totalSize = getInt(getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
-                    if (getInt(getColumnIndex(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
-                        downloading = false
-                    }
-                    val progress = (bytesDownloaded * 100L / totalSize).toInt()
-                    val status = getStatusMessage(this)
-
-                    downloadModel.apply {
-                        val fileSizeDownloaded = bytesIntoHumanReadable(bytesDownloaded.toLong())
-                        if(isCancelled){
-                            close()
-                        }else{
-                            updateProgressNotification(this@MainActivity,100,progress,fileSizeDownloaded)
-                        }
-                    }
-
-                    publishProgress(progress.toString(), bytesDownloaded.toString(), status,downloadModel)
-                    if(progress==100){
+                    if(downloadModel.isCancelled){
+                        close()
                         cancelProgressNotification(this@MainActivity)
+                    }else{
+                        moveToFirst()
+                        val bytesDownloaded = getInt(getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+                        val totalSize = getInt(getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+                        if (getInt(getColumnIndex(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
+                            downloading = false
+                        }
+                        val progress = (bytesDownloaded * 100L / totalSize).toInt()
+                        val status = getStatusMessage(this)
+
+                        downloadModel.apply {
+                            val fileSizeDownloaded = bytesIntoHumanReadable(bytesDownloaded.toLong())
+                            if(isCancelled){
+                                close()
+                            }else{
+                                updateProgressNotification(this@MainActivity,100,progress,fileSizeDownloaded)
+                            }
+                        }
+
+                        publishProgress(progress.toString(), bytesDownloaded.toString(), status,downloadModel)
+                        if(progress==100){
+                            cancelProgressNotification(this@MainActivity)
+                        }
+                        close()
                     }
-                    close()
                 }
             }
 
@@ -184,38 +185,6 @@ class MainActivity : AppCompatActivity() {
         downloadStatusTaskViaCoroutine(downloadedData.downloadId,downloadedData)
     }
 
-
-
-
-    private fun togglePauseResume() {
-        downloadedData.apply {
-            if (isIs_paused) {
-                // Set the states
-                isIs_paused = false
-                status = resumeState
-                // Update the UI
-                binding.pauseResume.text = getString(R.string.str_pause)
-                binding.fileStatus.text = getString(R.string.str_running)
-                // Notify the download manager
-                if (!resumeDownload(this@MainActivity)) {
-                    Toast.makeText(this@MainActivity, getString(R.string.str_failed_to_resume), Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                // Set the states
-                isIs_paused = true
-                status = pauseState
-                // Update the UI
-                binding.pauseResume.text = getString(R.string.str_resume)
-                binding.fileStatus.text = getString(R.string.str_pause)
-                // Notify the download manager
-                if (!pauseDownload(this@MainActivity)) {
-                    Toast.makeText(this@MainActivity, getString(R.string.str_failed_to_pause), Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-
-    }
 
     private var onComplete: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
