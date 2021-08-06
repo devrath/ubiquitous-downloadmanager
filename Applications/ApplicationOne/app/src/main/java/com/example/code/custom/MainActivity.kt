@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     var receiver = DownloadReceiver()
 
+    val workManager = WorkManager.getInstance(this@MainActivity)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -104,12 +106,18 @@ class MainActivity : AppCompatActivity() {
             filePath = ""
         }
 
-        WorkManager.getInstance(this@MainActivity).enqueue(work)
+        initWorkManager()
     }
 
-    private val work = OneTimeWorkRequestBuilder<DownloadWorker>()
-            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
-            .build()
+    private fun initWorkManager() {
+        workManager.beginUniqueWork("ordering_work", ExistingWorkPolicy.REPLACE,
+                        OneTimeWorkRequestBuilder<DownloadWorker>()
+                        .addTag("DownloadWorker")
+                        .setConstraints(Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED).build())
+                        .build())
+                        .enqueue()
+    }
 
 
 }
