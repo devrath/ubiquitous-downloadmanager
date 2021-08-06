@@ -2,7 +2,6 @@ package com.example.code.custom
 
 import android.annotation.SuppressLint
 import android.app.DownloadManager
-import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
@@ -106,11 +105,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         WorkManager.getInstance(this@MainActivity).enqueue(work)
-        //startService(Intent(this, MyService::class.java))
     }
 
-    // Build the OnetimeWorkRequest
-    private val work = OneTimeWorkRequestBuilder<DownloadWorkerTwo>()
+    private val work = OneTimeWorkRequestBuilder<DownloadWorker>()
             .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
             .build()
 

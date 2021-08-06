@@ -4,32 +4,31 @@ import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import androidx.work.*
-import com.example.code.custom.Constants.DOWNLOAD_STATUS_COMPLETED
-import com.example.code.custom.DownloadData.downloadedData
-import kotlinx.coroutines.async
+import androidx.work.CoroutineWorker
+import androidx.work.ForegroundInfo
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
+import com.example.code.custom.ProgressNotification.updateProgressNotificationWorkManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 
-class DownloadWorker (var ctx: Context, params: WorkerParameters) : CoroutineWorker(ctx, params) {
+class DownloadWorker (var context: Context, parameters: WorkerParameters) : CoroutineWorker(context, parameters) {
 
     override suspend fun doWork(): Result = coroutineScope {
-
         var status = ""
-
-        async {
-            status = downloadFileProcess(downloadedData.downloadId, downloadedData)
-        }.await()
-
-        if(status == DOWNLOAD_STATUS_COMPLETED){
-            Result.success()
+        withContext(Dispatchers.Default) {
+            status = downloadFileProcess(DownloadData.downloadedData.downloadId, DownloadData.downloadedData)
         }
-
-        Result.retry()
+        when (status) {
+            Constants.DOWNLOAD_STATUS_COMPLETED -> Result.success()
+            else -> Result.retry()
+        }
     }
 
     @SuppressLint("Range")
-    private fun downloadFileProcess(downloadId: Long, downloadModel: DownloadModel): String {
-        val downloadManager = ctx.getSystemService(AppCompatActivity.DOWNLOAD_SERVICE) as DownloadManager
+    private suspend fun downloadFileProcess(downloadId: Long, downloadModel: DownloadModel): String {
+        val downloadManager = context.getSystemService(AppCompatActivity.DOWNLOAD_SERVICE) as DownloadManager
         var downloading = true
         while (downloading) {
             DownloadManager.Query().apply {
@@ -37,7 +36,6 @@ class DownloadWorker (var ctx: Context, params: WorkerParameters) : CoroutineWor
                 downloadManager.query(this).apply {
                     if(downloadModel.isCancelled){
                         close()
-                        ProgressNotification.cancelProgressNotification(ctx)
                         downloading = false
                     }else{
                         moveToFirst()
@@ -50,20 +48,14 @@ class DownloadWorker (var ctx: Context, params: WorkerParameters) : CoroutineWor
                         val status = DownloadUtils.getStatusMessage(this)
 
                         downloadModel.apply {
-                            val fileSizeDownloaded =
-                                DownloadUtils.bytesIntoHumanReadable(bytesDownloaded.toLong())
-                            ProgressNotification.updateProgressNotification(
-                                context = ctx,
-                                max = 100, progress = progress,
-                                fileSizeDownloaded = fileSizeDownloaded,
-                                isDownloadPaused = isPaused
-                            )
+                            val fileSizeDownloaded = DownloadUtils.bytesIntoHumanReadable(bytesDownloaded.toLong())
+                            val foregroundInfo = createForegroundInfo(context = context, progress = progress, fileSizeDownloaded = fileSizeDownloaded)
+                            coroutineScope {
+                                setForeground(foregroundInfo)
+                            }
                         }
 
                         publishProgress(progress.toString(), bytesDownloaded.toString(), status, downloadModel)
-                        if(progress==100){
-                            ProgressNotification.cancelProgressNotification(ctx)
-                        }
                         close()
                     }
                 }
@@ -74,20 +66,23 @@ class DownloadWorker (var ctx: Context, params: WorkerParameters) : CoroutineWor
         return downloadModel.status
     }
 
+    private fun createForegroundInfo(context : Context, progress : Int, fileSizeDownloaded : String): ForegroundInfo {
+        val intent = WorkManager.getInstance(applicationContext).createCancelPendingIntent(id)
+        val notification = updateProgressNotificationWorkManager(context = context,max = 100,
+                fileSizeDownloaded =fileSizeDownloaded, pendingIntent = intent, progress=progress)
+        return ForegroundInfo(1, notification.build())
+    }
+
     private  fun publishProgress(
-        publishProgress: String,
-        bytesDownloaded: String,
-        status: String,
-        downloadModel: DownloadModel
+            publishProgress: String,
+            bytesDownloaded: String,
+            status: String,
+            downloadModel: DownloadModel
     ) {
         downloadModel.apply {
             fileSize = DownloadUtils.bytesIntoHumanReadable(bytesDownloaded.toLong())
             progress = publishProgress
-            if (!status
-                    .equals(Constants.pauseState, ignoreCase = true) && !status
-                    .equals(Constants.resumeState, ignoreCase = true)) {
-                downloadModel.status = status
-            }
+            downloadModel.status = status
         }
     }
 }
