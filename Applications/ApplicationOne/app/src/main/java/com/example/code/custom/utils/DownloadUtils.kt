@@ -16,7 +16,6 @@ import com.example.code.custom.data.DownloadData.downloadedData
 @SuppressLint("Range")
 object DownloadUtils {
 
-    private const val downloadUri = "content://downloads/my_downloads"
 
     fun bytesIntoHumanReadable(bytes: Long): String {
         val kilobyte: Long = 1024
@@ -44,26 +43,6 @@ object DownloadUtils {
             else -> "Unknown"
         }
         return msg
-    }
-
-    fun togglePauseResumeDownload(context: Context,pauseDownload:Boolean): Boolean {
-        var updatedRow = 0
-        val contentValues = ContentValues()
-        when {
-            pauseDownload -> contentValues.put("control", 1)
-            else -> contentValues.put("control", 0)
-        }
-        try {
-            updatedRow = context.contentResolver.update(
-                    Uri.parse(downloadUri),
-                    contentValues,
-                    "title=?",
-                    arrayOf(downloadedData.title)
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return 0 < updatedRow
     }
 
 }

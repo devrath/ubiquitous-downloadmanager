@@ -12,15 +12,14 @@ import com.example.code.custom.Constants.FILTER_DOWNLOAD_PAUSE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_RESUME
 import com.example.code.custom.data.DownloadData.downloadedData
 
-object ProgressNotification {
+class ProgressNotification( var context: Context, var max: Int,
+                           var fileSizeDownloaded: String,
+                           var pendingIntent: PendingIntent, var progress: Int,
+                           var isPaused : Boolean) {
 
-    private const val progressMax = 100
+    private val progressMax = 100
 
-    fun updateProgressNotificationWorkManager(context: Context, max: Int,
-                                              fileSizeDownloaded: String,
-                                              pendingIntent: PendingIntent,
-                                              progress: Int,
-                                              isPaused : Boolean): NotificationCompat.Builder {
+    fun updateProgressNotificationWorkManager(): NotificationCompat.Builder {
         val notification = prepareCancelableNotification(context,pendingIntent,isPaused)
         val messageToDisplay = fileSizeDownloaded.plus(" ").plus(context.getString(R.string.str_downloaded))
         notification.setContentText(messageToDisplay)
@@ -55,9 +54,5 @@ object ProgressNotification {
         }
     }
 
-    fun cancelProgressNotification(context: Context) {
-        NotificationManagerCompat.from(context).cancel(null, DOWNLOAD_ID);
-        downloadedData.isCancelled = true
-    }
 
 }

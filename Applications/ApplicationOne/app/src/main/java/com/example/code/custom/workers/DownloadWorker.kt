@@ -11,11 +11,11 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.example.code.custom.Constants
 import com.example.code.custom.data.DownloadData.downloadedData
-import com.example.code.custom.utils.ProgressNotification.updateProgressNotificationWorkManager
 import com.example.code.custom.data.DownloadData
 import com.example.code.custom.data.DownloadModel
 import com.example.code.custom.reciever.DownloadReceiver
 import com.example.code.custom.utils.DownloadUtils
+import com.example.code.custom.utils.ProgressNotification
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
@@ -91,8 +91,8 @@ class DownloadWorker (var context: Context, parameters: WorkerParameters) : Coro
     private fun createForegroundInfo(context : Context, progress : Int, fileSizeDownloaded : String): ForegroundInfo {
         val isPaused = downloadedData.isPaused
         val intent = WorkManager.getInstance(applicationContext).createCancelPendingIntent(id)
-        val notification = updateProgressNotificationWorkManager(context = context,max = 100,
-                fileSizeDownloaded =fileSizeDownloaded, pendingIntent = intent, progress=progress,isPaused=isPaused)
+        val notification = ProgressNotification(context = context,max = 100, fileSizeDownloaded = fileSizeDownloaded,
+                            pendingIntent = intent, progress=progress,isPaused=isPaused).updateProgressNotificationWorkManager()
         return ForegroundInfo(1, notification.build())
     }
 
