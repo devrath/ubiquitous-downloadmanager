@@ -2,14 +2,13 @@ package com.example.code.custom
 
 import android.annotation.SuppressLint
 import android.app.DownloadManager
+import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.webkit.URLUtil
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.work.*
 import com.example.code.R
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_CANCEL
@@ -106,8 +105,8 @@ class MainActivity : AppCompatActivity() {
             filePath = ""
         }
 
-        //downloadStatusTaskViaCoroutine(downloadedData.downloadId, downloadedData)
-        WorkManager.getInstance(this@MainActivity).enqueue(work)
+        //WorkManager.getInstance(this@MainActivity).enqueue(work)
+        startService(Intent(this, MyService::class.java))
     }
 
     // Build the OnetimeWorkRequest
