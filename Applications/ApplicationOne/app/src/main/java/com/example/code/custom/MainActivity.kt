@@ -105,12 +105,12 @@ class MainActivity : AppCompatActivity() {
             filePath = ""
         }
 
-        //WorkManager.getInstance(this@MainActivity).enqueue(work)
-        startService(Intent(this, MyService::class.java))
+        WorkManager.getInstance(this@MainActivity).enqueue(work)
+        //startService(Intent(this, MyService::class.java))
     }
 
     // Build the OnetimeWorkRequest
-    private val work = OneTimeWorkRequestBuilder<DownloadWorker>()
+    private val work = OneTimeWorkRequestBuilder<DownloadWorkerTwo>()
             .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
             .build()
 

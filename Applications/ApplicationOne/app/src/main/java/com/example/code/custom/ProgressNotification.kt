@@ -26,6 +26,32 @@ object ProgressNotification {
         NotificationManager.getNotificationManager(context)?.apply { notify(DOWNLOAD_ID, notification.build()) }
     }
 
+    fun updateProgressNotificationWorkManager(context: Context, max: Int,
+                                              fileSizeDownloaded: String,
+                                              pendingIntent: PendingIntent, progress: Int): NotificationCompat.Builder {
+        val notification = prepareCancelableNotification(context,pendingIntent)
+        val messageToDisplay = fileSizeDownloaded.plus(" ").plus(context.getString(R.string.str_downloaded))
+        notification.setContentText(messageToDisplay)
+                .setProgress(max, progress, false)
+                .setOngoing(false)
+        return notification
+    }
+
+    private fun prepareCancelableNotification(context: Context, pendingIntent: PendingIntent): NotificationCompat.Builder {
+        return NotificationCompat.Builder(context, CHANNEL_6_ID).apply {
+            setSmallIcon(R.drawable.ic_pokemon)
+            setContentTitle(context.getString(R.string.initiate_download))
+            setContentText(context.getString(R.string.str_downloading))
+            priority = NotificationCompat.PRIORITY_LOW
+            setOngoing(true)
+            setAutoCancel(false)
+            setOnlyAlertOnce(true)
+            // Add the action click behavior
+            addAction(R.drawable.ic_action, context.getString(R.string.str_cancel), pendingIntent)
+            setProgress(progressMax, 0, true)
+        }
+    }
+
     fun cancelProgressNotification(context: Context) {
         NotificationManagerCompat.from(context).cancel(null, DOWNLOAD_ID);
         downloadedData.isCancelled = true
