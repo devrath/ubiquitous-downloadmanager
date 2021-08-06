@@ -1,4 +1,4 @@
-package com.example.code.custom
+package com.example.code.custom.application
 
 import android.app.Application
 import android.app.NotificationChannel
@@ -7,7 +7,7 @@ import android.os.Build
 import com.example.code.custom.Constants.CHANNEL_6_DESCRIPTION
 import com.example.code.custom.Constants.CHANNEL_6_ID
 import com.example.code.custom.Constants.CHANNEL_6_NAME
-import com.example.code.custom.NotificationManager.getNotificationManager
+import com.example.code.custom.utils.NotificationManager.getNotificationManager
 
 class MyApp : Application() {
 

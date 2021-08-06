@@ -1,4 +1,4 @@
-package com.example.code.custom
+package com.example.code.custom.workers
 
 import android.annotation.SuppressLint
 import android.app.DownloadManager
@@ -9,8 +9,13 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.example.code.custom.DownloadData.downloadedData
-import com.example.code.custom.ProgressNotification.updateProgressNotificationWorkManager
+import com.example.code.custom.Constants
+import com.example.code.custom.data.DownloadData.downloadedData
+import com.example.code.custom.utils.ProgressNotification.updateProgressNotificationWorkManager
+import com.example.code.custom.data.DownloadData
+import com.example.code.custom.data.DownloadModel
+import com.example.code.custom.reciever.DownloadReceiver
+import com.example.code.custom.utils.DownloadUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext

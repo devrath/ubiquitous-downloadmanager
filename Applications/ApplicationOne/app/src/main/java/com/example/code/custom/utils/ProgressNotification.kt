@@ -1,4 +1,4 @@
-package com.example.code.custom
+package com.example.code.custom.utils
 
 import android.app.PendingIntent
 import android.content.Context
@@ -8,10 +8,9 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.code.R
 import com.example.code.custom.Constants.CHANNEL_6_ID
 import com.example.code.custom.Constants.DOWNLOAD_ID
-import com.example.code.custom.Constants.FILTER_DOWNLOAD_CANCEL
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_PAUSE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_RESUME
-import com.example.code.custom.DownloadData.downloadedData
+import com.example.code.custom.data.DownloadData.downloadedData
 
 object ProgressNotification {
 
@@ -48,7 +47,7 @@ object ProgressNotification {
             // Cancel - action
             addAction(R.drawable.ic_action, context.getString(R.string.str_cancel), pendingIntent)
             when {
-                // Toggling between pause and resume 
+                // Toggling between pause and resume
                 isPaused -> addAction(R.drawable.ic_action, context.getString(R.string.str_resume), actionResume)
                 else -> addAction(R.drawable.ic_action, context.getString(R.string.str_pause), actionPause)
             }

@@ -1,4 +1,4 @@
-package com.example.code.custom
+package com.example.code.custom.reciever
 
 import android.annotation.SuppressLint
 import android.app.DownloadManager
@@ -6,13 +6,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import com.example.code.custom.Constants
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_CANCEL
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_COMPLETE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_PAUSE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_RESUME
-import com.example.code.custom.DownloadData.downloadedData
-import com.example.code.custom.DownloadUtils.togglePauseResumeDownload
-import com.example.code.custom.ProgressNotification.cancelProgressNotification
+import com.example.code.custom.data.DownloadData.downloadedData
+import com.example.code.custom.utils.DownloadUtils.togglePauseResumeDownload
+import com.example.code.custom.utils.ProgressNotification.cancelProgressNotification
 
 class DownloadReceiver : BroadcastReceiver() {
 

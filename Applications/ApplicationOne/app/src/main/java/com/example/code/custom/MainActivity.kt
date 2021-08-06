@@ -16,8 +16,11 @@ import com.example.code.custom.Constants.FILTER_DOWNLOAD_PAUSE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_RESUME
 import com.example.code.custom.Constants.downloadingState
 import com.example.code.custom.Constants.imageURL
-import com.example.code.custom.DownloadData.downloadedData
-import com.example.code.custom.NotificationChannelApiLevel.isDownloadManagerEqualOrAbove
+import com.example.code.custom.data.DownloadData.downloadedData
+import com.example.code.custom.utils.NotificationChannelApiLevel.isDownloadManagerEqualOrAbove
+import com.example.code.custom.data.DownloadModel
+import com.example.code.custom.reciever.DownloadReceiver
+import com.example.code.custom.workers.DownloadWorker
 import com.example.code.databinding.ActivityMainBinding
 import java.io.File
 import java.util.*
@@ -41,21 +44,6 @@ class MainActivity : AppCompatActivity() {
         setFilePath()
     }
 
-    override fun onResume() {
-        super.onResume()
-        registerReceiver(receiver, IntentFilter().apply {
-            addAction(FILTER_DOWNLOAD_PAUSE)
-            addAction(FILTER_DOWNLOAD_RESUME)
-            addAction(FILTER_DOWNLOAD_CANCEL)
-            addAction(FILTER_DOWNLOAD_COMPLETE)
-        })
-    }
-
-    override fun onPause() {
-        super.onPause()
-        unregisterReceiver(receiver)
-    }
-
     private fun setOnClickListener() {
         binding.apply {
             initiateDownloadId.setOnClickListener { downloadFile(imageURL) }
@@ -65,8 +53,6 @@ class MainActivity : AppCompatActivity() {
     private fun setFilePath() {
         downloadPath = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
     }
-
-
 
     private fun downloadFile(url: String) {
         val filename = URLUtil.guessFileName(url, null, null)

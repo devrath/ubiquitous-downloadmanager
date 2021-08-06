@@ -1,4 +1,4 @@
-package com.example.code.custom
+package com.example.code.custom.utils
 
 import android.annotation.SuppressLint
 import android.app.DownloadManager
@@ -11,7 +11,7 @@ import com.example.code.custom.Constants.DOWNLOAD_STATUS_FAILED
 import com.example.code.custom.Constants.DOWNLOAD_STATUS_PAUSED
 import com.example.code.custom.Constants.DOWNLOAD_STATUS_PENDING
 import com.example.code.custom.Constants.DOWNLOAD_STATUS_RUNNING
-import com.example.code.custom.DownloadData.downloadedData
+import com.example.code.custom.data.DownloadData.downloadedData
 
 @SuppressLint("Range")
 object DownloadUtils {

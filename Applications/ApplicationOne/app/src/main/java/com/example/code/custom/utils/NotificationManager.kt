@@ -1,4 +1,4 @@
-package com.example.code.custom
+package com.example.code.custom.utils
 
 import android.app.NotificationManager
 import android.content.Context

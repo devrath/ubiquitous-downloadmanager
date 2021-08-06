@@ -1,4 +1,4 @@
-package com.example.code.custom
+package com.example.code.custom.data
 
 class DownloadModel {
     var downloadId: Long = 0
