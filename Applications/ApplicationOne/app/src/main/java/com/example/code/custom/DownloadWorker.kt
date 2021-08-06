@@ -3,11 +3,13 @@ package com.example.code.custom
 import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
+import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.example.code.custom.DownloadData.downloadedData
 import com.example.code.custom.ProgressNotification.updateProgressNotificationWorkManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -15,15 +17,30 @@ import kotlinx.coroutines.withContext
 
 class DownloadWorker (var context: Context, parameters: WorkerParameters) : CoroutineWorker(context, parameters) {
 
+    var receiver = DownloadReceiver()
+
     override suspend fun doWork(): Result = coroutineScope {
+        registerReciever()
         var status = ""
         withContext(Dispatchers.Default) {
             status = downloadFileProcess(DownloadData.downloadedData.downloadId, DownloadData.downloadedData)
         }
         when (status) {
-            Constants.DOWNLOAD_STATUS_COMPLETED -> Result.success()
+            Constants.DOWNLOAD_STATUS_COMPLETED -> {
+                context.unregisterReceiver(receiver)
+                Result.success()
+            }
             else -> Result.retry()
         }
+    }
+
+    private fun registerReciever() {
+        context.registerReceiver(receiver, IntentFilter().apply {
+            addAction(Constants.FILTER_DOWNLOAD_PAUSE)
+            addAction(Constants.FILTER_DOWNLOAD_RESUME)
+            addAction(Constants.FILTER_DOWNLOAD_CANCEL)
+            addAction(Constants.FILTER_DOWNLOAD_COMPLETE)
+        })
     }
 
     @SuppressLint("Range")
@@ -67,9 +84,10 @@ class DownloadWorker (var context: Context, parameters: WorkerParameters) : Coro
     }
 
     private fun createForegroundInfo(context : Context, progress : Int, fileSizeDownloaded : String): ForegroundInfo {
+        val isPaused = downloadedData.isPaused
         val intent = WorkManager.getInstance(applicationContext).createCancelPendingIntent(id)
         val notification = updateProgressNotificationWorkManager(context = context,max = 100,
-                fileSizeDownloaded =fileSizeDownloaded, pendingIntent = intent, progress=progress)
+                fileSizeDownloaded =fileSizeDownloaded, pendingIntent = intent, progress=progress,isPaused=isPaused)
         return ForegroundInfo(1, notification.build())
     }
 

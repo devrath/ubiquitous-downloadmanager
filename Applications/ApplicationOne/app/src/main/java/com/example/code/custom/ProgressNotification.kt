@@ -17,19 +17,12 @@ object ProgressNotification {
 
     private const val progressMax = 100
 
-    fun updateProgressNotification(context: Context, max: Int, progress: Int, fileSizeDownloaded: String, isDownloadPaused: Boolean) {
-        val notification = prepareNotification(context,isDownloadPaused)
-        val messageToDisplay = fileSizeDownloaded.plus(" ").plus(context.getString(R.string.str_downloaded))
-        notification.setContentText(messageToDisplay)
-                .setProgress(max, progress, false)
-                .setOngoing(false)
-        NotificationManager.getNotificationManager(context)?.apply { notify(DOWNLOAD_ID, notification.build()) }
-    }
-
     fun updateProgressNotificationWorkManager(context: Context, max: Int,
                                               fileSizeDownloaded: String,
-                                              pendingIntent: PendingIntent, progress: Int): NotificationCompat.Builder {
-        val notification = prepareCancelableNotification(context,pendingIntent)
+                                              pendingIntent: PendingIntent,
+                                              progress: Int,
+                                              isPaused : Boolean): NotificationCompat.Builder {
+        val notification = prepareCancelableNotification(context,pendingIntent,isPaused)
         val messageToDisplay = fileSizeDownloaded.plus(" ").plus(context.getString(R.string.str_downloaded))
         notification.setContentText(messageToDisplay)
                 .setProgress(max, progress, false)
@@ -37,7 +30,13 @@ object ProgressNotification {
         return notification
     }
 
-    private fun prepareCancelableNotification(context: Context, pendingIntent: PendingIntent): NotificationCompat.Builder {
+    private fun prepareCancelableNotification(
+        context: Context,
+        pendingIntent: PendingIntent,
+        isPaused: Boolean
+    ): NotificationCompat.Builder {
+        val actionPause = PendingIntent.getBroadcast(context, 0, Intent(FILTER_DOWNLOAD_PAUSE), PendingIntent.FLAG_UPDATE_CURRENT)
+        val actionResume = PendingIntent.getBroadcast(context, 0, Intent(FILTER_DOWNLOAD_RESUME), PendingIntent.FLAG_UPDATE_CURRENT)
         return NotificationCompat.Builder(context, CHANNEL_6_ID).apply {
             setSmallIcon(R.drawable.ic_pokemon)
             setContentTitle(context.getString(R.string.initiate_download))
@@ -46,8 +45,13 @@ object ProgressNotification {
             setOngoing(true)
             setAutoCancel(false)
             setOnlyAlertOnce(true)
-            // Add the action click behavior
+            // Cancel - action
             addAction(R.drawable.ic_action, context.getString(R.string.str_cancel), pendingIntent)
+            when {
+                // Toggling between pause and resume 
+                isPaused -> addAction(R.drawable.ic_action, context.getString(R.string.str_resume), actionResume)
+                else -> addAction(R.drawable.ic_action, context.getString(R.string.str_pause), actionPause)
+            }
             setProgress(progressMax, 0, true)
         }
     }
@@ -55,43 +59,6 @@ object ProgressNotification {
     fun cancelProgressNotification(context: Context) {
         NotificationManagerCompat.from(context).cancel(null, DOWNLOAD_ID);
         downloadedData.isCancelled = true
-    }
-
-    private fun prepareNotification(context: Context, isDownloadPaused: Boolean): NotificationCompat.Builder {
-
-        val actionCancel = PendingIntent.getBroadcast(context, 0, Intent(FILTER_DOWNLOAD_CANCEL), PendingIntent.FLAG_UPDATE_CURRENT)
-        val actionPause = PendingIntent.getBroadcast(context, 0, Intent(FILTER_DOWNLOAD_PAUSE), PendingIntent.FLAG_UPDATE_CURRENT)
-        val actionResume = PendingIntent.getBroadcast(context, 0, Intent(FILTER_DOWNLOAD_RESUME), PendingIntent.FLAG_UPDATE_CURRENT)
-        // Paused
-        if(isDownloadPaused) {
-            return NotificationCompat.Builder(context, CHANNEL_6_ID).apply {
-                setSmallIcon(R.drawable.ic_pokemon)
-                setContentTitle(context.getString(R.string.initiate_download))
-                setContentText(context.getString(R.string.str_downloading))
-                priority = NotificationCompat.PRIORITY_LOW
-                setOngoing(true)
-                setAutoCancel(false)
-                setOnlyAlertOnce(true)
-                // Add the action click behavior
-                addAction(R.drawable.ic_action, context.getString(R.string.str_cancel), actionCancel)
-                addAction(R.drawable.ic_action, context.getString(R.string.str_resume), actionResume)
-                setProgress(progressMax, 0, true)
-            }
-        }else{
-            return NotificationCompat.Builder(context, CHANNEL_6_ID).apply {
-                setSmallIcon(R.drawable.ic_pokemon)
-                setContentTitle(context.getString(R.string.initiate_download))
-                setContentText(context.getString(R.string.str_downloading))
-                priority = NotificationCompat.PRIORITY_LOW
-                setOngoing(true)
-                setAutoCancel(false)
-                setOnlyAlertOnce(true)
-                // Add the action click behavior
-                addAction(R.drawable.ic_action, context.getString(R.string.str_cancel), actionCancel)
-                addAction(R.drawable.ic_action, context.getString(R.string.str_pause), actionPause)
-                setProgress(progressMax, 0, true)
-            }
-        }
     }
 
 }
