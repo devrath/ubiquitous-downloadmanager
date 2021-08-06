@@ -1,16 +1,13 @@
-package com.example.code.custom.utils
+package com.example.code.custom.downloadManager
 
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.example.code.R
 import com.example.code.custom.Constants.CHANNEL_6_ID
-import com.example.code.custom.Constants.DOWNLOAD_ID
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_PAUSE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_RESUME
-import com.example.code.custom.data.DownloadData.downloadedData
 
 class ProgressNotification( var context: Context, var max: Int,
                            var fileSizeDownloaded: String,

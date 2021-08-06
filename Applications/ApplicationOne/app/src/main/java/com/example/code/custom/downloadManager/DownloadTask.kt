@@ -1,4 +1,4 @@
-package com.example.code.custom
+package com.example.code.custom.downloadManager
 
 import android.app.DownloadManager
 import android.content.Context
@@ -8,9 +8,9 @@ import android.webkit.URLUtil
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.*
 import com.example.code.R
+import com.example.code.custom.Constants
 import com.example.code.custom.data.DownloadData
 import com.example.code.custom.data.DownloadModel
-import com.example.code.custom.utils.NotificationChannelApiLevel
 import com.example.code.custom.workers.DownloadWorker
 import java.io.File
 

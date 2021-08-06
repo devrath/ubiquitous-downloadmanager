@@ -14,8 +14,8 @@ import com.example.code.custom.data.DownloadData.downloadedData
 import com.example.code.custom.data.DownloadData
 import com.example.code.custom.data.DownloadModel
 import com.example.code.custom.reciever.DownloadReceiver
-import com.example.code.custom.utils.DownloadUtils
-import com.example.code.custom.utils.ProgressNotification
+import com.example.code.custom.downloadManager.DownloadUtils
+import com.example.code.custom.downloadManager.ProgressNotification
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext

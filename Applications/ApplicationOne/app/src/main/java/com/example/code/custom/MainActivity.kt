@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.*
 import com.example.code.custom.Constants.imageURL
+import com.example.code.custom.downloadManager.DownloadTask
 import com.example.code.databinding.ActivityMainBinding
 import java.util.*
 

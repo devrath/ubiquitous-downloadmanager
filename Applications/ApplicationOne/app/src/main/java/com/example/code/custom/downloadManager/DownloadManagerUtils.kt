@@ -1,4 +1,4 @@
-package com.example.code.custom
+package com.example.code.custom.downloadManager
 
 import android.annotation.SuppressLint
 import android.app.DownloadManager
@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
+import com.example.code.custom.Constants
 import com.example.code.custom.data.DownloadData
 import com.example.code.custom.data.DownloadModel
 

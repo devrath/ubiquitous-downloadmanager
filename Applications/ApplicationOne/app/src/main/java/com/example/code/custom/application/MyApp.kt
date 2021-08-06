@@ -7,7 +7,7 @@ import android.os.Build
 import com.example.code.custom.Constants.CHANNEL_6_DESCRIPTION
 import com.example.code.custom.Constants.CHANNEL_6_ID
 import com.example.code.custom.Constants.CHANNEL_6_NAME
-import com.example.code.custom.utils.NotificationManager.getNotificationManager
+import com.example.code.custom.downloadManager.NotificationManager.getNotificationManager
 
 class MyApp : Application() {
 
