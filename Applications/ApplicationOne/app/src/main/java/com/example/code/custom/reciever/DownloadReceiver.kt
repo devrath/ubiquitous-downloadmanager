@@ -21,12 +21,12 @@ class DownloadReceiver : BroadcastReceiver() {
             when {
                 equals(FILTER_DOWNLOAD_PAUSE) -> {
                     downloadedData.isPaused = true
-                    downloadedData.status = Constants.pauseState
+                    downloadedData.status = Constants.PAUSE_STATE
                     DownloadManagerUtils(context = context,data=downloadedData).togglePauseResumeDownload(pauseDownload = true)
                 }
                 equals(FILTER_DOWNLOAD_RESUME) -> {
                     downloadedData.isPaused = false
-                    downloadedData.status = Constants.resumeState
+                    downloadedData.status = Constants.RESUME_STATE
                     DownloadManagerUtils(context = context,data=downloadedData).togglePauseResumeDownload(pauseDownload = false)
                 }
                 equals(FILTER_DOWNLOAD_COMPLETE) -> {

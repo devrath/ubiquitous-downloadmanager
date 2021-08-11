@@ -10,7 +10,7 @@ object NotificationChannelApiLevel {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
     }
 
-    fun isDownloadManagerEqualOrAbove(): Boolean {
+    fun isDownloadManagerEqualOrAboveNougat(): Boolean {
         // certain features of download manager is available for Nougat and higher
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
     }
