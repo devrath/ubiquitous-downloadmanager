@@ -4,12 +4,16 @@ import android.os.Bundle
 import android.os.Environment
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.work.*
 import com.example.code.custom.Constants.imageURL
 import com.example.code.custom.application.MyApp.DownloadData.downloadedData
 import com.example.code.custom.downloadManager.DownloadTask
 import com.example.code.custom.downloadManager.UtilDownloadPath
 import com.example.code.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.*
 
@@ -33,17 +37,33 @@ class MainActivity : AppCompatActivity() {
                 clearFiles()
             }
             chkIfFileExistsId.setOnClickListener {
-                val doesFileExist = File(UtilDownloadPath.getFilePath(this@MainActivity,downloadedData.title)).exists()
-                when {
-                    doesFileExist -> Toast.makeText(this@MainActivity, "File exists", Toast.LENGTH_LONG).show()
-                    else -> Toast.makeText(this@MainActivity, "File does not exists", Toast.LENGTH_LONG).show()
-                }
+                checkIfFileIsDownloaded()
             }
         }
     }
 
+    /**
+     * Check if the file is downloaded
+     */
+    private fun checkIfFileIsDownloaded() {
+        val doesFileExist =
+            File(UtilDownloadPath.getFilePath(this@MainActivity, downloadedData.title)).exists()
+        when {
+            doesFileExist -> showToast("File exists")
+            else -> showToast("File does not exists")
+        }
+    }
+
+    /**
+     * Clear the downloads
+     */
     private fun clearFiles() {
-       File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()).deleteDirectoryFiles()
+        lifecycleScope.launch(Dispatchers.IO) {
+            File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()).deleteDirectoryFiles()
+            withContext(Dispatchers.Main){
+                showToast("Downloads cleared !!")
+            }
+        }
     }
 
 }

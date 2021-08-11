@@ -3,15 +3,15 @@ package com.example.code.custom.downloadManager
 import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
-import android.os.Environment
 import android.webkit.URLUtil
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.*
 import com.example.code.R
 import com.example.code.custom.Constants
-import com.example.code.custom.application.MyApp
 import com.example.code.custom.application.MyApp.DownloadData.downloadedData
 import com.example.code.custom.data.DownloadModel
+import com.example.code.custom.downloadManager.UtilDownloadPath.isInternalStorageAvailable
+import com.example.code.custom.showToast
 import com.example.code.custom.workers.DownloadWorker
 import java.io.File
 
@@ -21,16 +21,13 @@ class DownloadTask(var context: Context,var url : String) {
     private val workManager = WorkManager.getInstance(context)
 
     fun initiateDownload() {
-        setFilePath()
-        initDownloadManager(url)
-        initWorkManager()
-    }
-
-    /**
-     *  Set the path where the file needs to be downloaded
-     **/
-    private fun setFilePath() {
-        downloadPath = UtilDownloadPath.getDownloadPath(context)
+        if(isInternalStorageAvailable(context)){
+            downloadPath = UtilDownloadPath.getDownloadPath(context)
+            initDownloadManager(url)
+            initWorkManager()
+        }else{
+            context.showToast("Internal Storage is not available")
+        }
     }
 
     /**
@@ -42,8 +39,8 @@ class DownloadTask(var context: Context,var url : String) {
         val file = File(downloadPath, filename)
         var request: DownloadManager.Request? = null
 
-        request = if (NotificationChannelApiLevel.isDownloadManagerEqualOrAbove()) {
-            DownloadManager.Request(Uri.parse(url)).apply {
+        request = when {
+            NotificationChannelApiLevel.isDownloadManagerEqualOrAboveNougat() -> DownloadManager.Request(Uri.parse(url)).apply {
                 setTitle(filename)
                 setDescription(context.getString(R.string.str_desc_downloading))
                 setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
@@ -52,8 +49,7 @@ class DownloadTask(var context: Context,var url : String) {
                 setAllowedOverMetered(true)
                 setAllowedOverRoaming(true)
             }
-        } else {
-            DownloadManager.Request(Uri.parse(url)).apply {
+            else -> DownloadManager.Request(Uri.parse(url)).apply {
                 setTitle(filename)
                 setDescription(context.getString(R.string.str_desc_downloading))
                 setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
