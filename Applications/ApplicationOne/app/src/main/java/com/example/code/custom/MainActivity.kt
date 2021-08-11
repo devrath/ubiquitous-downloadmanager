@@ -8,6 +8,7 @@ import androidx.work.*
 import com.example.code.custom.Constants.imageURL
 import com.example.code.custom.application.MyApp.DownloadData.downloadedData
 import com.example.code.custom.downloadManager.DownloadTask
+import com.example.code.custom.downloadManager.UtilDownloadPath
 import com.example.code.databinding.ActivityMainBinding
 import java.io.File
 import java.util.*
@@ -32,18 +33,11 @@ class MainActivity : AppCompatActivity() {
                 clearFiles()
             }
             chkIfFileExistsId.setOnClickListener {
-
-                val filePath = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
-                val fileName = downloadedData.title
-                val finalFileName = filePath.plus("/").plus(fileName)
-
-                val file = File(finalFileName)
-                if(file.exists()){
-                    Toast.makeText(this@MainActivity, "File exists", Toast.LENGTH_LONG).show()
-                }else{
-                    Toast.makeText(this@MainActivity, "File does not exists", Toast.LENGTH_LONG).show()
+                val doesFileExist = File(UtilDownloadPath.getFilePath(this@MainActivity,downloadedData.title)).exists()
+                when {
+                    doesFileExist -> Toast.makeText(this@MainActivity, "File exists", Toast.LENGTH_LONG).show()
+                    else -> Toast.makeText(this@MainActivity, "File does not exists", Toast.LENGTH_LONG).show()
                 }
-
             }
         }
     }

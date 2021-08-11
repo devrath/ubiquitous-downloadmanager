@@ -30,7 +30,7 @@ class DownloadTask(var context: Context,var url : String) {
      *  Set the path where the file needs to be downloaded
      **/
     private fun setFilePath() {
-        downloadPath = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
+        downloadPath = UtilDownloadPath.getDownloadPath(context)
     }
 
     /**
