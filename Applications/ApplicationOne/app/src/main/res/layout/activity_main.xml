@@ -17,4 +17,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <Button
+        android:id="@+id/delFilesId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/download_margin"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:text="@string/clear_downloaded_files"
+        app:layout_constraintEnd_toEndOf="@+id/initiateDownloadId"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/initiateDownloadId"
+        app:layout_constraintTop_toBottomOf="@+id/initiateDownloadId" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
