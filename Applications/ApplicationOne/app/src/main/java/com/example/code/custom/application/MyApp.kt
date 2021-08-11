@@ -8,7 +8,7 @@ import com.example.code.custom.Constants.CHANNEL_DESCRIPTION
 import com.example.code.custom.Constants.CHANNEL_ID
 import com.example.code.custom.Constants.CHANNEL_NAME
 import com.example.code.custom.data.DownloadModel
-import com.example.code.custom.downloadManager.NotificationManager.getNotificationManager
+import com.example.code.custom.downloadManager.DownloadUtils.getNotificationManager
 
 class MyApp : Application() {
 

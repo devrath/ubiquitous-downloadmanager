@@ -11,7 +11,9 @@ import com.example.code.custom.Constants
 import com.example.code.custom.Constants.DownloadWorkerName
 import com.example.code.custom.application.MyApp.DownloadData.downloadedData
 import com.example.code.custom.data.DownloadModel
-import com.example.code.custom.downloadManager.UtilDownloadPath.isInternalStorageAvailable
+import com.example.code.custom.downloadManager.DownloadUtils.getDownloadPath
+import com.example.code.custom.downloadManager.DownloadUtils.isDownloadManagerEqualOrAboveNougat
+import com.example.code.custom.downloadManager.DownloadUtils.isInternalStorageAvailable
 import com.example.code.custom.showToast
 import com.example.code.custom.workers.DownloadWorker
 import java.io.File
@@ -23,7 +25,7 @@ class DownloadTask(var context: Context,var url : String) {
 
     fun initiateDownload() {
         if(isInternalStorageAvailable(context)){
-            downloadPath = UtilDownloadPath.getDownloadPath(context)
+            downloadPath = getDownloadPath(context)
             initDownloadManager(url)
             initWorkManager()
         }else{
@@ -41,7 +43,7 @@ class DownloadTask(var context: Context,var url : String) {
         var request: DownloadManager.Request? = null
 
         request = when {
-            NotificationChannelApiLevel.isDownloadManagerEqualOrAboveNougat() -> DownloadManager.Request(Uri.parse(url)).apply {
+            isDownloadManagerEqualOrAboveNougat() -> DownloadManager.Request(Uri.parse(url)).apply {
                 setTitle(filename)
                 setDescription(context.getString(R.string.str_desc_downloading))
                 setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)

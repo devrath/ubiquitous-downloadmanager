@@ -2,14 +2,13 @@ package com.example.code.custom
 
 import android.os.Bundle
 import android.os.Environment
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.work.*
 import com.example.code.custom.Constants.imageURL
 import com.example.code.custom.application.MyApp.DownloadData.downloadedData
 import com.example.code.custom.downloadManager.DownloadTask
-import com.example.code.custom.downloadManager.UtilDownloadPath
+import com.example.code.custom.downloadManager.DownloadUtils.getFilePath
 import com.example.code.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun checkIfFileIsDownloaded() {
         val doesFileExist =
-            File(UtilDownloadPath.getFilePath(this@MainActivity, downloadedData.title)).exists()
+            File(getFilePath(this@MainActivity, downloadedData.title)).exists()
         when {
             doesFileExist -> showToast("File exists")
             else -> showToast("File does not exists")
