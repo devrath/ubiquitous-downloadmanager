@@ -2,9 +2,11 @@ package com.example.code.custom
 
 import android.os.Bundle
 import android.os.Environment
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.*
 import com.example.code.custom.Constants.imageURL
+import com.example.code.custom.application.MyApp.DownloadData.downloadedData
 import com.example.code.custom.downloadManager.DownloadTask
 import com.example.code.databinding.ActivityMainBinding
 import java.io.File
@@ -28,6 +30,20 @@ class MainActivity : AppCompatActivity() {
             }
             delFilesId.setOnClickListener {
                 clearFiles()
+            }
+            chkIfFileExistsId.setOnClickListener {
+
+                val filePath = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
+                val fileName = downloadedData.title
+                val finalFileName = filePath.plus("/").plus(fileName)
+
+                val file = File(finalFileName)
+                if(file.exists()){
+                    Toast.makeText(this@MainActivity, "File exists", Toast.LENGTH_LONG).show()
+                }else{
+                    Toast.makeText(this@MainActivity, "File does not exists", Toast.LENGTH_LONG).show()
+                }
+
             }
         }
     }
