@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.work.*
 import com.example.code.R
 import com.example.code.custom.Constants
+import com.example.code.custom.Constants.DownloadWorkerName
 import com.example.code.custom.application.MyApp.DownloadData.downloadedData
 import com.example.code.custom.data.DownloadModel
 import com.example.code.custom.downloadManager.UtilDownloadPath.isInternalStorageAvailable
@@ -62,7 +63,7 @@ class DownloadTask(var context: Context,var url : String) {
         val downloadEnqueueId = downloadManager.enqueue(request)
 
         downloadedData = DownloadModel().apply {
-            status = Constants.downloadingState
+            status = Constants.DOWNLOADING_STATE
             title = filename
             fileSize = "0"
             progress = "0"
@@ -76,7 +77,7 @@ class DownloadTask(var context: Context,var url : String) {
      * Here we initialize the work manager and specify the conditions for the work manager
      */
     private fun initWorkManager() {
-        workManager.beginUniqueWork("download_work", ExistingWorkPolicy.REPLACE,
+        workManager.beginUniqueWork(DownloadWorkerName, ExistingWorkPolicy.REPLACE,
             OneTimeWorkRequestBuilder<DownloadWorker>()
                 .addTag("DownloadWorker")
                 .setConstraints(Constraints.Builder()

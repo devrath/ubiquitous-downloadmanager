@@ -29,7 +29,7 @@ class DownloadManagerUtils(var context: Context,var data: DownloadModel) {
                 getString(getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).apply {
                     // Path-Ex:----> file:///storage/emulated/0/Android/data/com.example.code/files/Download/test10Mb-1.db
                     data.filePath = this
-                    data.status = Constants.completedState
+                    data.status = Constants.COMPLETED_STATE
                 }
             }
         }
@@ -45,12 +45,12 @@ class DownloadManagerUtils(var context: Context,var data: DownloadModel) {
         when {
             pauseDownload -> {
                 data.isPaused = true
-                data.status = Constants.pauseState
+                data.status = Constants.PAUSE_STATE
                 contentValues.put("control", 1)
             }
             else -> {
                 data.isPaused = false
-                data.status = Constants.resumeState
+                data.status = Constants.RESUME_STATE
                 contentValues.put("control", 0)
             }
         }

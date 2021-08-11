@@ -7,6 +7,8 @@ object Constants {
     // ---> Download file endpoints
     const val imageURL = "http://speedtest.ftp.otenet.gr/files/test10Mb.db"
 
+    const val DownloadWorkerName = "download_work"
+
     // ---> Notification channel constants
     const val CHANNEL_ID = "channel_id"
     const val CHANNEL_NAME = "Channel_name"
@@ -29,10 +31,10 @@ object Constants {
     // -----> Don't change the case and spelling of these constants
 
     // -----> Constants to track in model data
-    const val pauseState = "PAUSE"
-    const val resumeState = "RESUME"
-    const val downloadingState = "DOWNLOADING"
-    const val completedState = "COMPLETED"
+    const val PAUSE_STATE = "PAUSE"
+    const val RESUME_STATE = "RESUME"
+    const val DOWNLOADING_STATE = "DOWNLOADING"
+    const val COMPLETED_STATE = "COMPLETED"
     // -----> Constants to track in model data
 
 }
