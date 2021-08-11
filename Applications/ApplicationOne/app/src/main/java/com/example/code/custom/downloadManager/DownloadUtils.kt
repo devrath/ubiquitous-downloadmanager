@@ -12,7 +12,10 @@ import com.example.code.custom.Constants.DOWNLOAD_STATUS_RUNNING
 @SuppressLint("Range")
 object DownloadUtils {
 
-
+    /**
+     * Based on the bytes here we calculate bytes in terms of KB. MB, GB, TB which has to be displayed to user
+     * @param bytes : -> Bytes that are currently downloaded
+     */
     fun bytesIntoHumanReadable(bytes: Long): String {
         val kilobyte: Long = 1024
         val megabyte = kilobyte * 1024
@@ -28,6 +31,10 @@ object DownloadUtils {
         }
     }
 
+    /**
+     * By checking the state of the cursor from the download manager we determine the state of the file in process of download
+     * @param cursor : -> Cursor that points to the current state of the download
+     */
     fun getStatusMessage(cursor: Cursor): String {
         var msg = "-"
         msg = when (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))) {

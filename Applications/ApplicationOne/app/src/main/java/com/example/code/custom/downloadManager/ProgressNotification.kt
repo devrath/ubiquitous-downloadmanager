@@ -14,10 +14,12 @@ class ProgressNotification( var context: Context, var max: Int,
                            var pendingIntent: PendingIntent, var progress: Int,
                            var isPaused : Boolean) {
 
+    // Max progress
     private val progressMax = 100
 
-    fun updateProgressNotificationWorkManager(): NotificationCompat.Builder {
-        val notification = prepareCancelableNotification(context,pendingIntent,isPaused)
+    // We call this function when querying the file downloaded
+    fun updateDownloadNotification(): NotificationCompat.Builder {
+        val notification = prepDownloadNotification(context,pendingIntent,isPaused)
         val messageToDisplay = fileSizeDownloaded.plus(" ").plus(context.getString(R.string.str_downloaded))
         notification.setContentText(messageToDisplay)
                 .setProgress(max, progress, false)
@@ -25,7 +27,13 @@ class ProgressNotification( var context: Context, var max: Int,
         return notification
     }
 
-    private fun prepareCancelableNotification(
+    /**
+     * Here we construct the notification used to show for the user
+     * @param context :-> Context used to launch the notification
+     * @param pendingIntent :-> Used to pass to the action of the notification action
+     * @param isPaused :-> Used to determine the state of the notification if it is in paused/resume state
+     */
+    private fun prepDownloadNotification(
         context: Context,
         pendingIntent: PendingIntent,
         isPaused: Boolean
@@ -50,6 +58,5 @@ class ProgressNotification( var context: Context, var max: Int,
             setProgress(progressMax, 0, true)
         }
     }
-
 
 }

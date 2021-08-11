@@ -10,6 +10,7 @@ import androidx.work.*
 import com.example.code.R
 import com.example.code.custom.Constants
 import com.example.code.custom.application.MyApp
+import com.example.code.custom.application.MyApp.DownloadData.downloadedData
 import com.example.code.custom.data.DownloadModel
 import com.example.code.custom.workers.DownloadWorker
 import java.io.File
@@ -17,7 +18,7 @@ import java.io.File
 class DownloadTask(var context: Context,var url : String) {
 
     private var downloadPath = ""
-    val workManager = WorkManager.getInstance(context)
+    private val workManager = WorkManager.getInstance(context)
 
     fun initiateDownload() {
         setFilePath()
@@ -25,11 +26,17 @@ class DownloadTask(var context: Context,var url : String) {
         initWorkManager()
     }
 
-    /* Set the path where the file needs to be downloaded */
+    /**
+     *  Set the path where the file needs to be downloaded
+     **/
     private fun setFilePath() {
         downloadPath = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
     }
 
+    /**
+     * Here we prepare the download request
+     * @param url :-> Param which is needed for the download manager to download the apk
+     */
     private fun initDownloadManager(url: String) {
         val filename = URLUtil.guessFileName(url, null, null)
         val file = File(downloadPath, filename)
@@ -58,7 +65,7 @@ class DownloadTask(var context: Context,var url : String) {
         val downloadManager = context.getSystemService(AppCompatActivity.DOWNLOAD_SERVICE) as DownloadManager
         val downloadEnqueueId = downloadManager.enqueue(request)
 
-        MyApp.DownloadData.downloadedData = DownloadModel().apply {
+        downloadedData = DownloadModel().apply {
             status = Constants.downloadingState
             title = filename
             fileSize = "0"
@@ -69,8 +76,11 @@ class DownloadTask(var context: Context,var url : String) {
         }
     }
 
+    /**
+     * Here we initialize the work manager and specify the conditions for the work manager
+     */
     private fun initWorkManager() {
-        workManager.beginUniqueWork("ordering_work", ExistingWorkPolicy.REPLACE,
+        workManager.beginUniqueWork("download_work", ExistingWorkPolicy.REPLACE,
             OneTimeWorkRequestBuilder<DownloadWorker>()
                 .addTag("DownloadWorker")
                 .setConstraints(Constraints.Builder()

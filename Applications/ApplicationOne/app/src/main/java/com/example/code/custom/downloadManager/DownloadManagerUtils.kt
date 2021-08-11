@@ -13,8 +13,13 @@ import com.example.code.custom.data.DownloadModel
 @SuppressLint("Range")
 class DownloadManagerUtils(var context: Context,var data: DownloadModel) {
 
+    // Temporary place where the download manager keeps the file until the file is downloaded
     private val downloadUri = "content://downloads/my_downloads"
 
+    /**
+     * Once the download is complete
+     * @param id : -> Id of the file that is currently in process of download
+     */
     fun downloadManagerComplete(id : Long) {
         DownloadManager.Query().apply {
             setFilterById(id)
@@ -22,6 +27,7 @@ class DownloadManagerUtils(var context: Context,var data: DownloadModel) {
             downloadManager.query(DownloadManager.Query().setFilterById(id)).apply {
                 moveToFirst()
                 getString(getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)).apply {
+                    // Path-Ex:----> file:///storage/emulated/0/Android/data/com.example.code/files/Download/test10Mb-1.db
                     data.filePath = this
                     data.status = Constants.completedState
                 }
@@ -29,6 +35,10 @@ class DownloadManagerUtils(var context: Context,var data: DownloadModel) {
         }
     }
 
+    /**
+     * Using this toggle functionality we can switch the state of download manager
+     * @param pauseDownload : -> Value determines whether the download manager is in paused/resume state
+     */
     fun togglePauseResumeDownload(pauseDownload:Boolean): Boolean {
         var updatedRow = 0
         val contentValues = ContentValues()

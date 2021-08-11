@@ -92,7 +92,7 @@ class DownloadWorker (var context: Context, parameters: WorkerParameters) : Coro
         val isPaused = downloadedData.isPaused
         val intent = WorkManager.getInstance(applicationContext).createCancelPendingIntent(id)
         val notification = ProgressNotification(context = context,max = 100, fileSizeDownloaded = fileSizeDownloaded,
-                            pendingIntent = intent, progress=progress,isPaused=isPaused).updateProgressNotificationWorkManager()
+                            pendingIntent = intent, progress=progress,isPaused=isPaused).updateDownloadNotification()
         return ForegroundInfo(1, notification.build())
     }
 
