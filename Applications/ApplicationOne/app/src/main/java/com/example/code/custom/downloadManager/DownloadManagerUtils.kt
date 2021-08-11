@@ -7,7 +7,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import com.example.code.custom.Constants
-import com.example.code.custom.data.DownloadData
+import com.example.code.custom.application.MyApp
 import com.example.code.custom.data.DownloadModel
 
 @SuppressLint("Range")
@@ -49,7 +49,7 @@ class DownloadManagerUtils(var context: Context,var data: DownloadModel) {
                 Uri.parse(downloadUri),
                 contentValues,
                 "title=?",
-                arrayOf(DownloadData.downloadedData.title)
+                arrayOf(MyApp.DownloadData.downloadedData.title)
             )
         } catch (e: Exception) {
             e.printStackTrace()

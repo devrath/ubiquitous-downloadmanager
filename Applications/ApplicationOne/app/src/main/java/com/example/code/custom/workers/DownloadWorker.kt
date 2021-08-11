@@ -10,8 +10,8 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.example.code.custom.Constants
-import com.example.code.custom.data.DownloadData.downloadedData
-import com.example.code.custom.data.DownloadData
+import com.example.code.custom.application.MyApp
+import com.example.code.custom.application.MyApp.DownloadData.downloadedData
 import com.example.code.custom.data.DownloadModel
 import com.example.code.custom.reciever.DownloadReceiver
 import com.example.code.custom.downloadManager.DownloadUtils
@@ -28,7 +28,7 @@ class DownloadWorker (var context: Context, parameters: WorkerParameters) : Coro
         registerReciever()
         var status = ""
         withContext(Dispatchers.Default) {
-            status = downloadFileProcess(DownloadData.downloadedData.downloadId, DownloadData.downloadedData)
+            status = downloadFileProcess(downloadedData.downloadId, MyApp.DownloadData.downloadedData)
         }
         when (status) {
             Constants.DOWNLOAD_STATUS_COMPLETED -> {

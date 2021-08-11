@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.work.*
 import com.example.code.R
 import com.example.code.custom.Constants
-import com.example.code.custom.data.DownloadData
+import com.example.code.custom.application.MyApp
 import com.example.code.custom.data.DownloadModel
 import com.example.code.custom.workers.DownloadWorker
 import java.io.File
@@ -58,7 +58,7 @@ class DownloadTask(var context: Context,var url : String) {
         val downloadManager = context.getSystemService(AppCompatActivity.DOWNLOAD_SERVICE) as DownloadManager
         val downloadEnqueueId = downloadManager.enqueue(request)
 
-        DownloadData.downloadedData = DownloadModel().apply {
+        MyApp.DownloadData.downloadedData = DownloadModel().apply {
             status = Constants.downloadingState
             title = filename
             fileSize = "0"

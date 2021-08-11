@@ -3,13 +3,14 @@ package com.example.code.custom
 import android.app.DownloadManager
 
 object Constants {
-    const val DOWNLOAD_ID = 6
-    const val CHANNEL_6_ID = "channel6"
-    const val CHANNEL_6_NAME = "Channel 6"
-    const val CHANNEL_6_DESCRIPTION = "This is Channel 6"
 
+    // ---> Channel constants
+    const val CHANNEL_ID = "channel_id"
+    const val CHANNEL_NAME = "Channel_name"
+    const val CHANNEL_DESCRIPTION = "Channel Description"
+
+    // ---> Download file endpoints
     const val imageURL = "http://speedtest.ftp.otenet.gr/files/test10Mb.db"
-    //const val imageURL = "https://mpl-dev-builds.s3.ap-south-1.amazonaws.com/2021-08-05/MPL_com.mpl.androidapp_debug_development_qa_1.0.134_development_qa_20210805_08_57_1000134_134_20210805_08_57_sealed_zip.apk"
     const val pauseState = "PAUSE"
     const val resumeState = "RESUME"
     const val downloadingState = "Downloading"

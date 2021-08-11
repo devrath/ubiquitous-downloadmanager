@@ -9,8 +9,8 @@ import com.example.code.custom.Constants
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_COMPLETE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_PAUSE
 import com.example.code.custom.Constants.FILTER_DOWNLOAD_RESUME
+import com.example.code.custom.application.MyApp.DownloadData.downloadedData
 import com.example.code.custom.downloadManager.DownloadManagerUtils
-import com.example.code.custom.data.DownloadData.downloadedData
 
 class DownloadReceiver : BroadcastReceiver() {
 
