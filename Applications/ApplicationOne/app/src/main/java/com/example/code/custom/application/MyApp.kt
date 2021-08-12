@@ -9,7 +9,9 @@ import com.example.code.custom.Constants.CHANNEL_ID
 import com.example.code.custom.Constants.CHANNEL_NAME
 import com.example.code.custom.data.DownloadModel
 import com.example.code.custom.downloadManager.DownloadUtils.getNotificationManager
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class MyApp : Application() {
 
     object DownloadData {
