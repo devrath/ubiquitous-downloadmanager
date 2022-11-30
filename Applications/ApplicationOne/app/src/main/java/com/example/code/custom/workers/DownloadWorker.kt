@@ -4,18 +4,21 @@ import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
 import android.content.IntentFilter
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.example.code.custom.Constants
+import com.example.code.custom.DownloadManagerCursorStatus
 import com.example.code.custom.application.MyApp
 import com.example.code.custom.application.MyApp.DownloadData.downloadedData
 import com.example.code.custom.data.DownloadModel
 import com.example.code.custom.reciever.DownloadReceiver
 import com.example.code.custom.downloadManager.DownloadUtils
 import com.example.code.custom.downloadManager.ProgressNotification
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
@@ -31,6 +34,12 @@ class DownloadWorker (var context: Context, parameters: WorkerParameters) : Coro
             status = downloadFileProcess(downloadedData.downloadId, MyApp.DownloadData.downloadedData)
         }
         when (status) {
+            Constants.DOWNLOAD_STATUS_FAILED -> {
+
+                context.unregisterReceiver(receiver)
+                Result.failure()
+            }
+
             Constants.DOWNLOAD_STATUS_COMPLETED -> {
                 context.unregisterReceiver(receiver)
                 Result.success()
@@ -77,6 +86,12 @@ class DownloadWorker (var context: Context, parameters: WorkerParameters) : Coro
                             }
                         }
 
+                        when (getInt(getColumnIndex(DownloadManager.COLUMN_STATUS))) {
+                            DownloadManager.STATUS_FAILED -> {
+                                val causeOfFailure = DownloadManagerCursorStatus(Gson()).checkDownloadStatus(this)
+                                Log.d("tag", causeOfFailure.failedReason)
+                            }
+                        }
                         publishProgress(progress.toString(), bytesDownloaded.toString(), status, downloadModel)
                         close()
                     }
