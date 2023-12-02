@@ -1,5 +1,5 @@
 # ubiquitous-kotlin-downloadmanager
-This repository contains the demo sample on how to use download manager to download a file from a server. 
+𝚃𝚑𝚒𝚜 𝚛𝚎𝚙𝚘𝚜𝚒𝚝𝚘𝚛𝚢 𝚌𝚘𝚗𝚝𝚊𝚒𝚗𝚜 𝚝𝚑𝚎 𝚍𝚎𝚖𝚘 𝚜𝚊𝚖𝚙𝚕𝚎 𝚘𝚗 𝚑𝚘𝚠 𝚝𝚘 𝚞𝚜𝚎 𝙳𝚘𝚠𝚗𝚕𝚘𝚊𝚍 𝙼𝚊𝚗𝚊𝚐𝚎𝚛 𝚝𝚘 𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍 𝚊 𝚏𝚒𝚕𝚎 𝚏𝚛𝚘𝚖 𝚊 𝚜𝚎𝚛𝚟𝚎𝚛.
 ![Banner](https://github.com/devrath/devrath/blob/master/images/Banner.png)
 
 
@@ -8,16 +8,22 @@ This repository contains the demo sample on how to use download manager to downl
 <a><img src="https://img.shields.io/badge/Tool-Download--Manager-red"></a>
 </p>
 
-
 ## Observations
-1. File downloaded successfully 
-2. No storage permission was required in the manifest to download the file
-3. No runtime permission was needed
-4. Pause/Resume functionality is provided
-5. When the download is in progress, there is a notification visible in the notification bar  
+𝟷. 𝙵𝚒𝚕𝚎 𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍𝚎𝚍 𝚜𝚞𝚌𝚌𝚎𝚜𝚜𝚏𝚞𝚕𝚕𝚢 
+𝟸. 𝙽𝚘 𝚜𝚝𝚘𝚛𝚊𝚐𝚎 𝚙𝚎𝚛𝚖𝚒𝚜𝚜𝚒𝚘𝚗 𝚠𝚊𝚜 𝚛𝚎𝚚𝚞𝚒𝚛𝚎𝚍 𝚒𝚗 𝚝𝚑𝚎 𝚖𝚊𝚗𝚒𝚏𝚎𝚜𝚝 𝚝𝚘 𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍 𝚝𝚑𝚎 𝚏𝚒𝚕𝚎
+𝟹. 𝙽𝚘 𝚛𝚞𝚗𝚝𝚒𝚖𝚎 𝚙𝚎𝚛𝚖𝚒𝚜𝚜𝚒𝚘𝚗 𝚠𝚊𝚜 𝚗𝚎𝚎𝚍𝚎𝚍
+𝟺. 𝙿𝚊𝚞𝚜𝚎/𝚁𝚎𝚜𝚞𝚖𝚎 𝚏𝚞𝚗𝚌𝚝𝚒𝚘𝚗𝚊𝚕𝚒𝚝𝚢 𝚒𝚜 𝚙𝚛𝚘𝚟𝚒𝚍𝚎𝚍
+𝟻. 𝚆𝚑𝚎𝚗 𝚝𝚑𝚎 𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍 𝚒𝚜 𝚒𝚗 𝚙𝚛𝚘𝚐𝚛𝚎𝚜𝚜, 𝚝𝚑𝚎𝚛𝚎 𝚒𝚜 𝚊 𝚗𝚘𝚝𝚒𝚏𝚒𝚌𝚊𝚝𝚒𝚘𝚗 𝚟𝚒𝚜𝚒𝚋𝚕𝚎 𝚒𝚗 𝚝𝚑𝚎 𝚗𝚘𝚝𝚒𝚏𝚒𝚌𝚊𝚝𝚒𝚘𝚗 𝚋𝚊𝚛
 
 ## Output
-![Banner](https://github.com/devrath/ubiquitous-kotlin-downloadmanager/blob/main/assets/output_update.jpg)
+
+<div align="center">
+
+| **`Demo`** |
+| ---------- |
+| <img src="https://github.com/devrath/ubiquitous-kotlin-downloadmanager/blob/main/assets/output_update.jpg" width="370" height="390"/>  |
+
+</div>
 
 ## **`𝚂𝚞𝚙𝚙𝚘𝚛𝚝`** ☕
 𝙸𝚏 𝚢𝚘𝚞 𝚏𝚎𝚎𝚕 𝚕𝚒𝚔𝚎 𝚜𝚞𝚙𝚙𝚘𝚛𝚝 𝚖𝚎 𝚊 𝚌𝚘𝚏𝚏𝚎𝚎 𝚏𝚘𝚛 𝚖𝚢 𝚎𝚏𝚏𝚘𝚛𝚝𝚜, 𝙸 𝚠𝚘𝚞𝚕𝚍 𝚐𝚛𝚎𝚊𝚝𝚕𝚢 𝚊𝚙𝚙𝚛𝚎𝚌𝚒𝚊𝚝𝚎 𝚒𝚝.</br>
