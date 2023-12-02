@@ -4,8 +4,6 @@
 # 𝚞𝚋𝚒𝚚𝚞𝚒𝚝𝚘𝚞𝚜-𝚔𝚘𝚝𝚕𝚒𝚗-𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍𝚖𝚊𝚗𝚊𝚐𝚎𝚛 🧞‍
 𝚃𝚑𝚒𝚜 𝚛𝚎𝚙𝚘𝚜𝚒𝚝𝚘𝚛𝚢 𝚌𝚘𝚗𝚝𝚊𝚒𝚗𝚜 𝚝𝚑𝚎 𝚍𝚎𝚖𝚘 𝚜𝚊𝚖𝚙𝚕𝚎 𝚘𝚗 𝚑𝚘𝚠 𝚝𝚘 𝚞𝚜𝚎 𝙳𝚘𝚠𝚗𝚕𝚘𝚊𝚍 𝙼𝚊𝚗𝚊𝚐𝚎𝚛 𝚝𝚘 𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍 𝚊 𝚏𝚒𝚕𝚎 𝚏𝚛𝚘𝚖 𝚊 𝚜𝚎𝚛𝚟𝚎𝚛.
 
-
-
 <p align="center">
 <a><img src="https://img.shields.io/badge/Language-Kotlin-lightgrey"></a>
 <a><img src="https://img.shields.io/badge/Tool-Download--Manager-red"></a>
