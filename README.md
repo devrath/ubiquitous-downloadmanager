@@ -7,6 +7,7 @@
 <p align="center">
 <a><img src="https://img.shields.io/badge/Language-Kotlin-lightgrey"></a>
 <a><img src="https://img.shields.io/badge/Tool-Download--Manager-red"></a>
+<a><img src="https://img.shields.io/badge/Tool-Work--Manager-purple"></a>
 </p>
 
 ## `𝚆𝚑𝚢 𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍 𝚖𝚊𝚗𝚊𝚐𝚎𝚛 𝚒𝚜 𝚞𝚜𝚎𝚍?`
